@@ -23,6 +23,7 @@ gnome_games_SOURCES = \
 	\
 	desktop/desktop-game-source.vala \
 	\
+	ui/application.vala \
 	ui/app-window.vala \
 	\
 	main.vala \
