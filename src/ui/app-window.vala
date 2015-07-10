@@ -16,7 +16,12 @@ private class Games.AppWindow : Gtk.ApplicationWindow {
 
         var pixbuf = Gtk.IconTheme.get_default().load_icon("input-gaming", 64, 0);
 
+        var icon_theme = Gtk.IconTheme.get_default ();
+
         game_source.each_game((game) => {
+	    var icon_info = icon_theme.lookup_by_gicon (game.icon, 64, Gtk.IconLookupFlags.FORCE_SIZE);
+	    var pixbuf = icon_info.load_icon ();
+
             Gtk.TreeIter iter;
             games_list_store.append(out iter);
             games_list_store.set(iter, 0, game.name,
