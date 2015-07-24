@@ -15,7 +15,9 @@ AC_SUBST(GLIB_MIN_VERSION)
 
 PKG_CHECK_MODULES(GNOME_GAMES, [
 	glib-2.0 >= $GLIB_MIN_VERSION
+	gio-unix-2.0
 	gtk+-3.0
+	tracker-sparql-1.0
 ])
 
 AC_CONFIG_FILES([
