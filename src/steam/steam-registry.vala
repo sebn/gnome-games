@@ -1,12 +1,17 @@
 // This file is part of GNOME Games. License: GPLv3
 
 private class Games.SteamRegistry {
+	private struct Token {
+		string label;
+		uint line;
+	}
+
 	private SteamRegistryValue tree;
 
 	public SteamRegistry (string appmanifest_path) throws Error {
 		var tokens = tokenize (appmanifest_path);
 		size_t index = 0;
-		tree = parse_tokens (null, tokens, ref index);
+		tree = parse_tokens (null, tokens, ref index, appmanifest_path);
 	}
 
 	public string[] get_children (string[] path) {
@@ -61,7 +66,7 @@ private class Games.SteamRegistry {
 		return null;
 	}
 
-	private string[] tokenize (string appmanifest_path) throws Error {
+	private Token[] tokenize (string appmanifest_path) throws Error {
 		var file = File.new_for_path (appmanifest_path);
 
 		if (!file.query_exists ())
@@ -69,16 +74,22 @@ private class Games.SteamRegistry {
 
 		var dis = new DataInputStream (file.read ());
 
-		string[] tokens = {};
+		Token[] tokens = {};
 
 		var regex = /({|}|(?:".+?"))/;
 
 		string line;
 		MatchInfo match_info;
+		uint line_number = 0;
 		while ((line = dis.read_line (null)) != null) {
+			line_number++;
+
 			int start_position = 0;
 			while (regex.match_full (line, -1, start_position, 0, out match_info)) {
-				tokens += match_info.fetch (1);
+				tokens += Token () {
+					label = match_info.fetch (1),
+					line = line_number
+				};
 
 				int dummy = 0;
 				match_info.fetch_pos (1, out dummy, out start_position);
@@ -88,42 +99,46 @@ private class Games.SteamRegistry {
 		return tokens;
 	}
 
-	private SteamRegistryValue? parse_tokens (SteamRegistryNode? parent, string[] tokens, ref size_t index) throws SteamRegistryError {
+	private SteamRegistryValue? parse_tokens (SteamRegistryNode? parent,
+	                                          Token[] tokens,
+	                                          ref size_t index,
+	                                          string appmanifest_path)
+	                                          throws SteamRegistryError {
 		SteamRegistryValue? to_return = null;
 
 		while (index < tokens.length) {
-			if (tokens[index] == "{")
-				throw new SteamRegistryError.UNEXPECTED_TOKEN ("Unexpected token '{'");
+			if (tokens[index].label == "{")
+				throw new SteamRegistryError.UNEXPECTED_TOKEN ("%s:%u: Unexpected token '{'", appmanifest_path, tokens[index].line);
 
-			if (tokens[index] == "}") {
+			if (tokens[index].label == "}") {
 				index++;
 
 				continue;
 			}
 
-			var tag = tokens[index];
+			var tag = tokens[index].label;
 			tag = tag[1:-1]; // Remove the quotes.
 
 			index++;
 
 			if (index >= tokens.length)
-				throw new SteamRegistryError.UNEXPECTED_END ("Unexpected end of tokens");
+				throw new SteamRegistryError.UNEXPECTED_END ("%s:%u: Unexpected end of tokens", appmanifest_path, tokens[index].line);
 
-			if (tokens[index] == "}")
-				throw new SteamRegistryError.UNEXPECTED_TOKEN ("Unexpected token '}'");
+			if (tokens[index].label == "}")
+				throw new SteamRegistryError.UNEXPECTED_TOKEN ("%s:%u: Unexpected token '}'", appmanifest_path, tokens[index].line);
 
-			if (tokens[index] == "{") {
+			if (tokens[index].label == "{") {
 				index++;
 
 				var node = new SteamRegistryNode (tag);
-				parse_tokens (node, tokens, ref index);
+				parse_tokens (node, tokens, ref index, appmanifest_path);
 
 				if (parent != null)
 					parent.add_child (node);
 				to_return = node;
 			}
 			else {
-				var data = tokens[index];
+				var data = tokens[index].label;
 				data = data[1:-1]; // Remove the quotes.
 
 				index++;
