@@ -61,6 +61,7 @@ public class Games.RetroRunner : Object, Runner {
 	private Gtk.EventBox widget;
 
 	private string module_path;
+	private string module_basename;
 	private string game_path;
 	private string uid;
 
@@ -79,6 +80,7 @@ public class Games.RetroRunner : Object, Runner {
 	public RetroRunner (string module_basename, string game_path, string uid) throws Error {
 		construction_succeeded = false;
 
+		this.module_basename = module_basename;
 		this.module_path = Retro.search_module (module_basename);
 		this.game_path = game_path;
 		this.uid = uid;
@@ -148,7 +150,7 @@ public class Games.RetroRunner : Object, Runner {
 	private void prepare_core () throws Error {
 		var module = File.new_for_path (module_path);
 		if (!module.query_exists ()) {
-			var msg = @"Couldn't run game: module '$module_path' not found.";
+			var msg = @"Couldn't run game: module '$module_basename' not found.";
 
 			throw new RetroError.MODULE_NOT_FOUND (msg);
 		}
