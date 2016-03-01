@@ -45,4 +45,3 @@ private class Games.SteamRunner : Object, Runner {
 	public void pause () {
 	}
 }
-
