@@ -71,9 +71,6 @@ private class Games.ApplicationWindow : Gtk.ApplicationWindow {
 			return true;
 		}
 
-		if (content_box.search_bar_handle_event (event))
-			return true;
-
 		return false;
 	}
 
