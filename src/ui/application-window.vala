@@ -71,6 +71,10 @@ private class Games.ApplicationWindow : Gtk.ApplicationWindow {
 			return true;
 		}
 
+		// Start searching if UI state is Collection
+		if (ui_state == UiState.COLLECTION && content_box.search_bar_handle_event (event))
+			return true;
+
 		return false;
 	}
 
