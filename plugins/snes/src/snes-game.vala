@@ -74,4 +74,3 @@ private class Games.SnesGame : Object, Game {
 		return new RetroRunner (MODULE_BASENAME, uri, uid_string);
 	}
 }
-

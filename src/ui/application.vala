@@ -159,4 +159,3 @@ private class Games.Application : Gtk.Application {
 	}
 
 }
-

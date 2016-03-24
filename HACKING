@@ -12,4 +12,3 @@ Add the following to your `~/.config/jhbuildrc`:
 Then:
 
     jhbuild build gnome-games
-
