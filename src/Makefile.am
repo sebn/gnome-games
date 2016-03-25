@@ -36,13 +36,17 @@ gnome_games_SOURCES = \
 	command/command-error.vala \
 	command/command-runner.vala \
 	\
+	core/cover.vala \
 	core/game.vala \
 	core/game-source.vala \
 	core/plugin.vala \
 	core/plugin-register.vala \
 	core/plugin-registrar.vala \
 	core/runner.vala \
+	core/title.vala \
+	core/uid.vala \
 	\
+	dummy/dummy-cover.vala \
 	dummy/dummy-game.vala \
 	dummy/dummy-game-source.vala \
 	dummy/dummy-runner.vala \
@@ -74,7 +78,9 @@ gnome_games_SOURCES = \
 	ui/search-bar.vala \
 	ui/ui-state.vala \
 	\
+	utils/filename-title.vala \
 	utils/fingerprint.vala \
+	utils/generic-game.vala \
 	utils/grep.vala \
 	\
 	config.vala \
