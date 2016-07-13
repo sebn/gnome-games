@@ -36,7 +36,6 @@ private class Games.RetroInputManager : Object {
 
 		// Plug this gamepad to the port where the keyboard was plugged as a last resort
 		var port = keyboard_port;
-		print (@"plugged $port\n");
 		gamepad.unplugged.connect (() => handle_gamepad_unplugged (port));
 		input.set_controller_device (keyboard_port, new RetroGamepad (gamepad));
 
@@ -59,7 +58,6 @@ private class Games.RetroInputManager : Object {
 	}
 
 	private void handle_gamepad_unplugged (int port) {
-		print (@"unplugged $port\n");
 		if (keyboard_port > port) {
 			// Remove the controller and shift keyboard to "lesser" port
 			is_port_plugged[keyboard_port] = false;
