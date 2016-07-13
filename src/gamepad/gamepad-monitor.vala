@@ -41,20 +41,6 @@ public class LibGamepad.GamepadMonitor : Object {
 
 	}
 
-	/**
-	 * This static function returns a raw gamepad given a guid. It can be used
-	 * for creating interfaces for remappable-controls.
-	 * @param  identifier         The identifier of the raw gamepad that you want
-	 */
-	public static RawGamepad? get_raw_gamepad (string identifier) {
-		init_static_if_not ();
-
-		if (identifier == null)
-			return null;
-		else
-			return identifier_to_raw_gamepad.get (identifier);
-	}
-
 	private static void init_static_if_not () {
 		if (identifier_to_raw_gamepad == null)
 			identifier_to_raw_gamepad = new HashTable<string, RawGamepad> (str_hash, str_equal);
