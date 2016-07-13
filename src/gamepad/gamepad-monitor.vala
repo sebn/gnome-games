@@ -14,11 +14,9 @@ public class LibGamepad.GamepadMonitor : Object {
 
 	/**
 	 * Emitted when a gamepad is unplugged
-	 * @param  identifier    The identifier of the unplugged gamepad
-	 * @param  guid          The guid of the unplugged gamepad
-	 * @param  name          The name of the unplugged gamepad
+	 * @param  gamepad    The gamepad
 	 */
-	public signal void gamepad_unplugged (string identifier, string guid, string? name);
+	public signal void gamepad_unplugged (Gamepad gamepad);
 
 	public delegate void GamepadCallback (Gamepad gamepad);
 
@@ -68,12 +66,13 @@ public class LibGamepad.GamepadMonitor : Object {
 		gamepad_plugged (new Gamepad (raw_gamepad));
 	}
 
-	private void on_raw_gamepad_unplugged (string identifier) {
-		var raw_gamepad = identifier_to_raw_gamepad.get (identifier);
+	private void on_raw_gamepad_unplugged (RawGamepad raw_gamepad) {
+		gamepad_unplugged (new Gamepad (raw_gamepad));
+		/*var raw_gamepad = identifier_to_raw_gamepad.get (identifier);
 		if (raw_gamepad == null)
 			return;
 		guid_to_raw_name.remove (raw_gamepad.guid.to_string ());
 		gamepad_unplugged (raw_gamepad.identifier, raw_gamepad.guid,
-		                   MappingsManager.get_name (raw_gamepad.guid) ?? raw_gamepad.name);
+		                   MappingsManager.get_name (raw_gamepad.guid) ?? raw_gamepad.name);*/
 	}
 }

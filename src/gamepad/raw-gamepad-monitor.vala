@@ -17,13 +17,9 @@ public interface LibGamepad.RawGamepadMonitor : Object {
 
 	/**
 	 * This signal should be emitted when a gamepad is unplugged
-	 *
-	 * If an identifier which is not passed with gamepad_plugged even once is passed,
-	 * then it is ignored. Drivers may use this to their benefit
-	 *
-	 * @param  identifier    The identifier of the unplugged gamepad
+	 * @param   raw_gamepad   The raw gamepad
 	 */
-	public abstract signal void gamepad_unplugged (string identifier);
+	public abstract signal void gamepad_unplugged (RawGamepad raw_gamepad);
 
 	public delegate void RawGamepadCallback (RawGamepad raw_gamepad);
 

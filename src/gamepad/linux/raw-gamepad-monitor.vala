@@ -4,6 +4,7 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 	public delegate void RawGamepadCallback (RawGamepad raw_gamepad);
 
 	private GUdev.Client client;
+	private HashTable<string, RawGamepad> raw_gamepads;
 
 	public LinuxRawGamepadMonitor () {
 		client = new GUdev.Client ({"input"});
@@ -43,10 +44,17 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 				} catch (FileError err) {
 					return;
 				}
+				raw_gamepads.replace (identifier, raw_gamepad);
 				gamepad_plugged (raw_gamepad);
 				break;
 			case "remove":
-				gamepad_unplugged (identifier);
+				if (!raw_gamepads.contains (identifier))
+					break;
+
+				var raw_gamepad = raw_gamepads.get (identifier);
+				raw_gamepads.remove (identifier);
+
+				gamepad_unplugged (raw_gamepad);
 				break;
 			}
 		}
