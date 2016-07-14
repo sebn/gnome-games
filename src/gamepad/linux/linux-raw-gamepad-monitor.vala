@@ -38,7 +38,6 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 			if (raw_gamepad != null) {
 				// This signal is emitted from here to simplify the code
 				raw_gamepad.unplugged ();
-				gamepad_unplugged (raw_gamepad);
 			}
 			break;
 		}

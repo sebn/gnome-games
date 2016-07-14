@@ -10,12 +10,6 @@ public interface LibGamepad.RawGamepadMonitor : Object {
 	 */
 	public abstract signal void gamepad_plugged (RawGamepad raw_gamepad);
 
-	/**
-	 * This signal should be emitted when a gamepad is unplugged
-	 * @param   raw_gamepad   The raw gamepad
-	 */
-	public abstract signal void gamepad_unplugged (RawGamepad raw_gamepad);
-
 	public delegate void RawGamepadCallback (RawGamepad raw_gamepad);
 
 	/**

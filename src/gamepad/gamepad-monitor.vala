@@ -12,12 +12,6 @@ public class LibGamepad.GamepadMonitor : Object {
 	 */
 	public signal void gamepad_plugged (Gamepad gamepad);
 
-	/**
-	 * Emitted when a gamepad is unplugged
-	 * @param  gamepad    The gamepad
-	 */
-	public signal void gamepad_unplugged (Gamepad gamepad);
-
 	public delegate void GamepadCallback (Gamepad gamepad);
 
 	private static SList <Gamepad> gamepads;
@@ -50,10 +44,7 @@ public class LibGamepad.GamepadMonitor : Object {
 	private Gamepad add_gamepad (RawGamepad raw_gamepad) {
 		var gamepad = new Gamepad (raw_gamepad);
 		gamepads.append (gamepad);
-		gamepad.unplugged.connect (() => {
-			gamepads.remove (gamepad);
-			gamepad_unplugged (gamepad);
-		});
+		gamepad.unplugged.connect (() => gamepads.remove (gamepad));
 
 		return gamepad;
 	}
