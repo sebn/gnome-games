@@ -2,7 +2,6 @@
 
 private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 	private int fd;
-	private GUdev.Client gudev_client;
 	private uint? event_source_id;
 	private Libevdev.Evdev dev;
 
@@ -57,10 +56,6 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 		dev = new Libevdev.Evdev ();
 		if (dev.set_fd (fd) < 0)
 			throw new FileError.FAILED (@"Evdev is unable to open $file_name: $(Posix.strerror (Posix.errno))");
-
-		// Monitor the file for deletion
-		gudev_client = new GUdev.Client ({"input"});
-		gudev_client.uevent.connect (handle_gudev_event);
 
 		_name = dev.name;
 		_guid = LinuxGuidHelpers.from_dev (dev);
@@ -144,13 +139,6 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 				}
 				break;
 			}
-		}
-	}
-
-	private void handle_gudev_event (string action, GUdev.Device gudev_dev) {
-		if (action == "remove" && gudev_dev.get_device_file () == identifier) {
-			remove_event_source ();
-			unplugged ();
 		}
 	}
 
