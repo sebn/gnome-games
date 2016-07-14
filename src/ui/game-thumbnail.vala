@@ -6,10 +6,11 @@ private class Games.GameThumbnail: Gtk.DrawingArea {
 	private const Gtk.CornerType[] bottom_corners = { Gtk.CornerType.BOTTOM_LEFT, Gtk.CornerType.BOTTOM_RIGHT };
 
 	private const double ICON_SCALE = 0.75;
+	private const double COVER_MARGIN = 0;
 	private const double FRAME_RADIUS = 2;
 	private const int EMBLEM_PADDING = 8;
 
-	public int center_emblem_size { set; get; default = 16; }
+	public int center_emblem_size { set; get; default = 32; }
 	public int secondary_emblem_size { set; get; default = 8; }
 
 	private Icon _icon;
@@ -25,6 +26,31 @@ private class Games.GameThumbnail: Gtk.DrawingArea {
 		}
 		default = null;
 	}
+
+	private ulong cover_changed_id;
+	private Cover _cover;
+	public Cover cover {
+		get { return _cover; }
+		set {
+			if (_cover == value)
+				return;
+
+			if (_cover != null)
+				_cover.disconnect (cover_changed_id);
+
+			_cover = value;
+
+			if (_cover != null)
+				_cover.changed.connect (invalidate_cover);
+
+			invalidate_cover ();
+		}
+		default = null;
+	}
+
+	private Gdk.Pixbuf? cover_cache;
+	private int previous_cover_width;
+	private int previous_cover_height;
 
 	public struct DrawingContext {
 		Cairo.Context cr;
@@ -53,9 +79,15 @@ private class Games.GameThumbnail: Gtk.DrawingArea {
 		if (icon == null)
 			return false;
 
+		if (cover == null)
+			return false;
+
 		var drawn = false;
 
-		drawn = draw_icon (context);
+		drawn = draw_cover (context);
+
+		if (!drawn)
+			drawn = draw_icon (context);
 
 		// Draw the default thumbnail if no thumbnail have been drawn
 		if (!drawn)
@@ -74,6 +106,20 @@ private class Games.GameThumbnail: Gtk.DrawingArea {
 			return false;
 
 		draw_background (context);
+		draw_pixbuf (context, pixbuf);
+		draw_border (context);
+
+		return true;
+	}
+
+	public bool draw_cover (DrawingContext context) {
+		var pixbuf = get_scaled_cover (context);
+		if (pixbuf == null)
+			return false;
+
+		context.cr.set_source_rgb (0, 0, 0);
+		rounded_rectangle (context.cr, 0.5, 0.5, context.width - 1, context.height - 1, FRAME_RADIUS);
+		context.cr.fill ();
 		draw_pixbuf (context, pixbuf);
 		draw_border (context);
 
@@ -128,6 +174,44 @@ private class Games.GameThumbnail: Gtk.DrawingArea {
 		}
 	}
 
+	private Gdk.Pixbuf? get_scaled_cover (DrawingContext context) {
+		if (previous_cover_width != context.width) {
+			previous_cover_width = context.width;
+			cover_cache = null;
+		}
+
+		if (previous_cover_height != context.height) {
+			previous_cover_height = context.height;
+			cover_cache = null;
+		}
+
+		if (cover_cache != null)
+			return cover_cache;
+
+		var g_icon = cover.get_cover ();
+		if (g_icon == null)
+			return null;
+
+		var theme = Gtk.IconTheme.get_default ();
+		var lookup_flags = Gtk.IconLookupFlags.FORCE_SIZE | Gtk.IconLookupFlags.FORCE_REGULAR;
+		var size = int.min (context.width, context.height) - COVER_MARGIN * 2;
+		var icon_info = theme.lookup_by_gicon (g_icon, (int) size, lookup_flags);
+
+		try {
+			cover_cache = icon_info.load_icon ();
+		}
+		catch (Error e) {
+			warning (@"Couldn't load the icon: $(e.message)\n");
+		}
+
+		return cover_cache;
+	}
+
+	private void invalidate_cover () {
+		cover_cache = null;
+		queue_draw ();
+	}
+
 	private void draw_pixbuf (DrawingContext context, Gdk.Pixbuf pixbuf) {
 		var surface = Gdk.cairo_surface_create_from_pixbuf (pixbuf, 1, context.window);
 
@@ -144,7 +228,7 @@ private class Games.GameThumbnail: Gtk.DrawingArea {
 		Cairo.ImageSurface mask = new Cairo.ImageSurface (Cairo.Format.A8, context.width, context.height);
 
 		Cairo.Context cr = new Cairo.Context (mask);
-		cr.set_source_rgb (0, 0, 0);
+		cr.set_source_rgba (0, 0, 0, 0.9);
 		rounded_rectangle (cr, 0.5, 0.5, context.width - 1, context.height - 1, FRAME_RADIUS);
 		cr.fill ();
 

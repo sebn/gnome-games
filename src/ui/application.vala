@@ -2,7 +2,7 @@
 
 private extern const string VERSION;
 
-private class Games.Application : Gtk.Application {
+public class Games.Application : Gtk.Application {
 	private ListStore collection;
 
 	private Tracker.Sparql.Connection? _connection;
@@ -24,7 +24,7 @@ private class Games.Application : Gtk.Application {
 
 	private ApplicationWindow window;
 
-	public Application () {
+	internal Application () {
 		Object (application_id: "org.gnome.Games",
 		        flags: ApplicationFlags.FLAGS_NONE);
 	}
@@ -76,6 +76,29 @@ private class Games.Application : Gtk.Application {
 		return @"$data_dir/snapshots";
 	}
 
+	public static string get_cache_dir () {
+		var cache_dir = Environment.get_user_cache_dir ();
+
+		return @"$cache_dir/gnome-games";
+	}
+
+	public static string get_covers_dir () {
+		var cache_dir = get_cache_dir ();
+
+		return @"$cache_dir/covers";
+	}
+
+	public static void try_make_dir (string path) {
+		var file = File.new_for_path (path);
+		try {
+			if (!file.query_exists ())
+				file.make_directory_with_parents ();
+		}
+		catch (Error e) {
+			warning (@"$(e.message)\n");
+		}
+	}
+
 	protected override void activate () {
 		Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = true;
 
@@ -94,7 +117,7 @@ private class Games.Application : Gtk.Application {
 		window.show ();
 	}
 
-	public async void load_game_list () {
+	internal async void load_game_list () {
 		GameSource[] sources = {};
 
 		var register = PluginRegister.get_register ();
@@ -177,4 +200,3 @@ private class Games.Application : Gtk.Application {
 	}
 
 }
-

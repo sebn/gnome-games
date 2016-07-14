@@ -70,6 +70,9 @@ gnome_games_SOURCES = \
 	gamepad/standard-gamepad-axis.vala \
 	gamepad/standard-gamepad-button.vala \
 	\
+	grilo/grilo-cover.vala \
+	grilo/grilo-media.vala \
+	\
 	retro/retro-error.vala \
 	retro/retro-gamepad.vala \
 	retro/retro-input-manager.vala \
@@ -118,6 +121,7 @@ gnome_games_VALAFLAGS = \
 	--vapidir=gamepad/linux/ \
 	--pkg gio-2.0 \
 	--pkg glib-2.0 \
+	--pkg grilo-0.3 \
 	--pkg gtk+-3.0 \
 	--pkg tracker-sparql-1.0 \
 	--pkg retro-gobject-0.6 \
