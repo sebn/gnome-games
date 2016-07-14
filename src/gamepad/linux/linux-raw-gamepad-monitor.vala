@@ -23,31 +23,24 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 			return;
 
 		var identifier = device.get_device_file ();
-		if ((device.has_property ("ID_INPUT_JOYSTICK") && device.get_property ("ID_INPUT_JOYSTICK") == "1") ||
-		    (device.has_property (".INPUT_CLASS") && device.get_property (".INPUT_CLASS") == "joystick")) {
-			switch (action) {
-			case "add":
-				RawGamepad raw_gamepad;
-				try {
-					raw_gamepad = new LinuxRawGamepad (identifier);
-				} catch (FileError e) {
-					return;
-				}
-				raw_gamepads.replace (identifier, raw_gamepad);
+
+		if (!is_gamepad (device))
+			return;
+
+		switch (action) {
+		case "add":
+			var raw_gamepad = add_gamepad (device);
+			if (raw_gamepad != null)
 				gamepad_plugged (raw_gamepad);
-				break;
-			case "remove":
-				if (!raw_gamepads.contains (identifier))
-					break;
-
-				var raw_gamepad = raw_gamepads.get (identifier);
-				raw_gamepads.remove (identifier);
-
+			break;
+		case "remove":
+			var raw_gamepad = remove_gamepad (device);
+			if (raw_gamepad != null) {
 				// This signal is emitted from here to simplify the code
 				raw_gamepad.unplugged ();
 				gamepad_unplugged (raw_gamepad);
-				break;
 			}
+			break;
 		}
 	}
 
@@ -56,15 +49,42 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 			return;
 
 		var identifier = device.get_device_file ();
-		if ((device.has_property ("ID_INPUT_JOYSTICK") && device.get_property ("ID_INPUT_JOYSTICK") == "1") ||
-		    (device.has_property (".INPUT_CLASS") && device.get_property (".INPUT_CLASS") == "joystick")) {
-			RawGamepad raw_gamepad;
-			try {
-				raw_gamepad = new LinuxRawGamepad (identifier);
-			} catch (FileError e) {
-				return;
-			}
-			raw_gamepads.replace (identifier, raw_gamepad);
+
+		if (!is_gamepad (device))
+			return;
+
+		add_gamepad (device);
+	}
+
+	private RawGamepad? add_gamepad (GUdev.Device device) {
+		RawGamepad raw_gamepad;
+		try {
+			raw_gamepad = new LinuxRawGamepad (identifier);
+		} catch (FileError e) {
+			return null;
 		}
+
+		if (raw_gamepads.contains (identifier))
+			return null;
+
+		raw_gamepads.insert (identifier, raw_gamepad);
+	}
+
+	private RawGamepad? remove_gamepad (GUdev.Device device) {
+		if (!raw_gamepads.contains (identifier))
+			return null;
+
+		var raw_gamepad = raw_gamepads.get (identifier);
+		raw_gamepads.remove (identifier);
+
+		return raw_gamepad;
+	}
+
+	private bool is_gamepad (GUdev.Device device) {
+		if ((device.has_property ("ID_INPUT_JOYSTICK") && device.get_property ("ID_INPUT_JOYSTICK") == "1") ||
+		    (device.has_property (".INPUT_CLASS") && device.get_property (".INPUT_CLASS") == "joystick"))
+			return true;
+		else
+			return false;
 	}
 }
