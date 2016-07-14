@@ -54,6 +54,7 @@ public class LibGamepad.GamepadMonitor : Object {
 			gamepads.remove (gamepad);
 			gamepad_unplugged (gamepad);
 		});
+
 		return gamepad;
 	}
 
