@@ -71,20 +71,17 @@ public class LibGamepad.Gamepad : Object {
 	}
 
 	private void on_raw_button_event (int button, bool value) {
-		MappedEvent event;
-		mapping.get_button_mapping (button, out event);
+		var event = mapping.get_button_mapping (button, out event);
 		emit_event (event, value ? 1 : 0);
 	}
 
 	private void on_raw_axis_event (int axis, double value) {
-		MappedEvent event;
-		mapping.get_axis_mapping (axis, out event);
+		var event = mapping.get_axis_mapping (axis, out event);
 		emit_event (event, value);
 	}
 
 	private void on_raw_dpad_event (int dpad_index, int axis, int value) {
-		MappedEvent event;
-		mapping.get_dpad_mapping (dpad_index, axis, value, out event);
+		var event = mapping.get_dpad_mapping (dpad_index, axis, value, out event);
 		emit_event (event, value.abs ());
 	}
 

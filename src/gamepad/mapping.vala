@@ -66,10 +66,8 @@ public class LibGamepad.Mapping : Object {
 		}
 	}
 
-	public void get_dpad_mapping (int dpad_index,
-	                              int dpad_axis,
-	                              int dpad_value,
-	                              out MappedEvent event) {
+	public MappedEvent get_dpad_mapping (int dpad_index, int dpad_axis, int dpad_value) {
+		var event = MappedEvent ();
 		int dpad_position;
 		var dpad = dpads[dpad_index];
 		if (dpad_value == 0)
@@ -86,9 +84,11 @@ public class LibGamepad.Mapping : Object {
 			event.button = (StandardGamepadButton) dpad.values[dpad_position];
 			break;
 		}
+		return event;
 	}
 
-	public void get_axis_mapping (int axis_number, out MappedEvent event) {
+	public MappedEvent get_axis_mapping (int axis_number) {
+		var event = MappedEvent ();
 		event.type = axes_type[axis_number];
 		switch (event.type) {
 		case InputType.AXIS:
@@ -98,9 +98,11 @@ public class LibGamepad.Mapping : Object {
 			event.button = (StandardGamepadButton) axes_value[axis_number];
 			break;
 		}
+		return event;
 	}
 
-	public void get_button_mapping (int button_number, out MappedEvent event) {
+	public MappedEvent get_button_mapping (int button_number) {
+		var event = MappedEvent ();
 		event.type = buttons_type[button_number];
 		switch (event.type) {
 		case InputType.AXIS:
@@ -110,6 +112,7 @@ public class LibGamepad.Mapping : Object {
 			event.button = (StandardGamepadButton) buttons_value[button_number];
 			break;
 		}
+		return event;
 	}
 
 	public static InputType map_type (string str) {
