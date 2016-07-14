@@ -11,7 +11,7 @@ private class Games.RetroInputManager : Object {
 	public RetroInputManager (Gtk.EventBox widget) {
 		input = new RetroGtk.InputDeviceManager ();
 		keyboard = new RetroGtk.VirtualGamepad (widget);
-		gamepad_monitor = new LibGamepad.GamepadMonitor ();
+		gamepad_monitor = LibGamepad.GamepadMonitor.get_instance ();
 
 		input.set_keyboard (new RetroGtk.Keyboard (widget));
 

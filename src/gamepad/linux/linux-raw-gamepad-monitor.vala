@@ -3,15 +3,24 @@
 private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 	public delegate void RawGamepadCallback (RawGamepad raw_gamepad);
 
+	private static LinuxRawGamepadMonitor instance;
+
 	private GUdev.Client client;
 	private HashTable<string, RawGamepad> raw_gamepads;
 
-	public LinuxRawGamepadMonitor () {
+	private LinuxRawGamepadMonitor () {
 		client = new GUdev.Client ({"input"});
 		client.uevent.connect (handle_udev_client_callback);
 
 		// Initialize internally plugged in gamepads
 		client.query_by_subsystem ("input").foreach (initial_device_iterator);
+	}
+
+	public static LinuxRawGamepadMonitor get_instance () {
+		if (instance == null)
+			instance = new LinuxRawGamepadMonitor ();
+
+		return instance;
 	}
 
 	public void foreach_gamepad (RawGamepadCallback callback) {
@@ -56,6 +65,7 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 	}
 
 	private RawGamepad? add_gamepad (GUdev.Device device) {
+		var identifier = device.get_device_file ();
 		RawGamepad raw_gamepad;
 		try {
 			raw_gamepad = new LinuxRawGamepad (identifier);
@@ -72,6 +82,7 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 	}
 
 	private RawGamepad? remove_gamepad (GUdev.Device device) {
+		var identifier = device.get_device_file ();
 		if (!raw_gamepads.contains (identifier))
 			return null;
 

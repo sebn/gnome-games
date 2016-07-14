@@ -14,23 +14,27 @@ public class LibGamepad.GamepadMonitor : Object {
 
 	public delegate void GamepadCallback (Gamepad gamepad);
 
-	private static SList <Gamepad> gamepads;
+	private static GamepadMonitor instance;
 
+	private SList <Gamepad> gamepads;
 	private RawGamepadMonitor raw_gamepad_monitor;
 
-	public GamepadMonitor () {
-		init_static_if_not ();
+	private GamepadMonitor () {
+		if (gamepads == null)
+			gamepads = new SList <Gamepad> ();
 
-		raw_gamepad_monitor = new LinuxRawGamepadMonitor ();
+		raw_gamepad_monitor = LinuxRawGamepadMonitor.get_instance ();
 
 		raw_gamepad_monitor.gamepad_plugged.connect (on_raw_gamepad_plugged);
 
 		raw_gamepad_monitor.foreach_gamepad ((raw_gamepad) => add_gamepad (raw_gamepad));
 	}
 
-	private static void init_static_if_not () {
-		if (gamepads == null)
-			gamepads = new SList <Gamepad> ();
+	public static GamepadMonitor get_instance () {
+		if (instance == null)
+			instance = new GamepadMonitor ();
+
+		return instance;
 	}
 
 	/**
