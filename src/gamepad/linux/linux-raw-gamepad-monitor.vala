@@ -24,7 +24,7 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 
 		var identifier = dev.get_device_file ();
 		if ((dev.has_property ("ID_INPUT_JOYSTICK") && dev.get_property ("ID_INPUT_JOYSTICK") == "1") ||
-			(dev.has_property (".INPUT_CLASS") && dev.get_property (".INPUT_CLASS") == "joystick")) {
+		    (dev.has_property (".INPUT_CLASS") && dev.get_property (".INPUT_CLASS") == "joystick")) {
 			switch (action) {
 			case "add":
 				RawGamepad raw_gamepad;
@@ -57,7 +57,7 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 
 		var identifier = dev.get_device_file ();
 		if ((dev.has_property ("ID_INPUT_JOYSTICK") && dev.get_property ("ID_INPUT_JOYSTICK") == "1") ||
-			(dev.has_property (".INPUT_CLASS") && dev.get_property (".INPUT_CLASS") == "joystick")) {
+		    (dev.has_property (".INPUT_CLASS") && dev.get_property (".INPUT_CLASS") == "joystick")) {
 			RawGamepad raw_gamepad;
 			try {
 				raw_gamepad = new LinuxRawGamepad (identifier);
