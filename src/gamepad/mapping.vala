@@ -27,12 +27,12 @@ public class LibGamepad.Mapping : Object {
 			if (mapping.split (":").length == 2) {
 				var str = mapping.split (":")[0];
 				var real = mapping.split (":")[1];
-				var type = MappingHelpers.map_type (str);
+				var type = map_type (str);
 				if (type == InputType.INVALID) {
 					if (str != "platform") debug ("Invalid token : %s", str);
 					continue;
 				}
-				var value = MappingHelpers.map_value (str);
+				var value = map_value (str);
 				switch (real[0]) {
 				case 'h':
 					var dpad_parse_array = real[1:real.length].split (".");
@@ -109,6 +109,85 @@ public class LibGamepad.Mapping : Object {
 		case InputType.BUTTON:
 			event.button = (StandardGamepadButton) buttons_value[button_number];
 			break;
+		}
+	}
+
+	public static InputType map_type (string str) {
+		switch (str) {
+		case "leftx":
+		case "lefty":
+		case "rightx":
+		case "righty":
+			return InputType.AXIS;
+		case "a":
+		case "b":
+		case "back":
+		case "dpdown":
+		case "dpleft":
+		case "dpright":
+		case "dpup":
+		case "guide":
+		case "leftshoulder":
+		case "leftstick":
+		case "lefttrigger":
+		case "rightshoulder":
+		case "rightstick":
+		case "righttrigger":
+		case "start":
+		case "x":
+		case "y":
+			return InputType.BUTTON;
+		default:
+			return InputType.INVALID;
+		}
+	}
+
+	public static int map_value (string str) {
+		switch (str) {
+		case "leftx":
+			return StandardGamepadAxis.LEFT_X;
+		case "lefty":
+			return StandardGamepadAxis.LEFT_Y;
+		case "rightx":
+			return StandardGamepadAxis.RIGHT_X;
+		case "righty":
+			return StandardGamepadAxis.RIGHT_Y;
+		case "a":
+			return StandardGamepadButton.A;
+		case "b":
+			return StandardGamepadButton.B;
+		case "back":
+			return StandardGamepadButton.SELECT;
+		case "dpdown":
+			return StandardGamepadButton.DPAD_DOWN;
+		case "dpleft":
+			return StandardGamepadButton.DPAD_LEFT;
+		case "dpright":
+			return StandardGamepadButton.DPAD_RIGHT;
+		case "dpup":
+			return StandardGamepadButton.DPAD_UP;
+		case "guide":
+			return StandardGamepadButton.HOME;
+		case "leftshoulder":
+			return StandardGamepadButton.SHOULDER_L;
+		case "leftstick":
+			return StandardGamepadButton.STICK_L;
+		case "lefttrigger":
+			return StandardGamepadButton.TRIGGER_L;
+		case "rightshoulder":
+			return StandardGamepadButton.SHOULDER_R;
+		case "rightstick":
+			return StandardGamepadButton.STICK_R;
+		case "righttrigger":
+			return StandardGamepadButton.TRIGGER_R;
+		case "start":
+			return StandardGamepadButton.START;
+		case "x":
+			return StandardGamepadButton.X;
+		case "y":
+			return StandardGamepadButton.Y;
+		default:
+			return StandardGamepadButton.UNKNOWN;
 		}
 	}
 }

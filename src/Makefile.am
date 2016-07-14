@@ -64,7 +64,6 @@ gnome_games_SOURCES = \
 	gamepad/input-type.vala \
 	gamepad/mapped-event.vala \
 	gamepad/mapping-error.vala \
-	gamepad/mapping-helpers.vala \
 	gamepad/mapping.vala \
 	gamepad/mappings-manager.vala \
 	gamepad/standard-gamepad-axis.vala \
