@@ -28,11 +28,6 @@ public class LibGamepad.Gamepad : Object {
 
 
 	/**
-	 * The raw name reported by the driver
-	 */
-	public string? raw_name { get; private set; }
-
-	/**
 	 * The guid
 	 */
 	public string? guid { get; private set; }
@@ -59,9 +54,8 @@ public class LibGamepad.Gamepad : Object {
 
 	public Gamepad (RawGamepad raw_gamepad) throws FileError {
 		this.raw_gamepad = raw_gamepad;
-		raw_name = raw_gamepad.name;
 		guid = raw_gamepad.guid;
-		name = MappingsManager.get_name (guid) ?? raw_name;
+		name = MappingsManager.get_name (guid) ?? raw_gamepad.name;
 		try {
 			mapping = new Mapping.from_sdl_string (MappingsManager.get_mapping (guid));
 			mapped = true;
