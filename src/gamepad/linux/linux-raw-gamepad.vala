@@ -3,7 +3,7 @@
 private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 	private int fd;
 	private uint? event_source_id;
-	private Libevdev.Evdev dev;
+	private Libevdev.Evdev device;
 
 	private uint8 key_map[Linux.Input.KEY_MAX];
 	private uint8 abs_map[Linux.Input.ABS_MAX];
@@ -30,9 +30,9 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 
 			_dpads_number = 0;
 			for (var i = Linux.Input.ABS_HAT0X; i <= Linux.Input.ABS_HAT3Y; i += 2) {
-				if (dev.has_event_code (Linux.Input.EV_ABS, i) ||
-				    dev.has_event_code (Linux.Input.EV_ABS, i + 1)) {
-					var absinfo = dev.get_abs_info (i);
+				if (device.has_event_code (Linux.Input.EV_ABS, i) ||
+				    device.has_event_code (Linux.Input.EV_ABS, i + 1)) {
+					var absinfo = device.get_abs_info (i);
 					if (absinfo == null)
 						continue;
 
@@ -51,12 +51,12 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 		if (fd < 0)
 			throw new FileError.FAILED (@"Unable to open file $file_name: $(Posix.strerror (Posix.errno))");
 
-		dev = new Libevdev.Evdev ();
-		if (dev.set_fd (fd) < 0)
+		device = new Libevdev.Evdev ();
+		if (device.set_fd (fd) < 0)
 			throw new FileError.FAILED (@"Evdev is unable to open $file_name: $(Posix.strerror (Posix.errno))");
 
-		_name = dev.name;
-		_guid = LinuxGuidHelpers.from_dev (dev);
+		_name = device.name;
+		_guid = LinuxGuidHelpers.from_dev (device);
 
 		// Poll the events in the default main loop
 		var channel = new IOChannel.unix_new (fd);
@@ -64,13 +64,13 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 
 		// Initialize dpads, buttons and axes
 		for (var i = Linux.Input.BTN_JOYSTICK; i < Linux.Input.KEY_MAX; i++) {
-			if (dev.has_event_code (Linux.Input.EV_KEY, i)) {
+			if (device.has_event_code (Linux.Input.EV_KEY, i)) {
 				key_map[i - Linux.Input.BTN_MISC] = _buttons_number;
 				_buttons_number++;
 			}
 		}
 		for (var i = Linux.Input.BTN_MISC; i < Linux.Input.BTN_JOYSTICK; i++) {
-			if (dev.has_event_code (Linux.Input.EV_KEY, i)) {
+			if (device.has_event_code (Linux.Input.EV_KEY, i)) {
 				key_map[i - Linux.Input.BTN_MISC] = _buttons_number;
 				_buttons_number++;
 			}
@@ -84,8 +84,8 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 				i = Linux.Input.ABS_HAT3Y;
 				continue;
 			}
-			if (dev.has_event_code (Linux.Input.EV_ABS, i)) {
-				var absinfo = dev.get_abs_info (i);
+			if (device.has_event_code (Linux.Input.EV_ABS, i)) {
+				var absinfo = device.get_abs_info (i);
 				abs_map[i] = _axes_number;
 				abs_info[_axes_number] = absinfo;
 				_axes_number++;
@@ -99,7 +99,7 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 	}
 
 	private bool poll_events () {
-		while (dev.has_event_pending () > 0)
+		while (device.has_event_pending () > 0)
 			handle_evdev_event ();
 
 		return true;
@@ -108,7 +108,7 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 	private void handle_evdev_event () {
 		int rc;
 		Linux.Input.Event ev;
-		rc = dev.next_event (Libevdev.ReadFlag.NORMAL, out ev);
+		rc = device.next_event (Libevdev.ReadFlag.NORMAL, out ev);
 		if (rc == 0) {
 			int code = ev.code;
 			switch (ev.type) {

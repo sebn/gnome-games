@@ -18,13 +18,13 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 		raw_gamepads.foreach((identifier, raw_gamepad) => callback (raw_gamepad));
 	}
 
-	private void handle_udev_client_callback (string action, GUdev.Device dev) {
-		if (dev.get_device_file () == null)
+	private void handle_udev_client_callback (string action, GUdev.Device device) {
+		if (device.get_device_file () == null)
 			return;
 
-		var identifier = dev.get_device_file ();
-		if ((dev.has_property ("ID_INPUT_JOYSTICK") && dev.get_property ("ID_INPUT_JOYSTICK") == "1") ||
-		    (dev.has_property (".INPUT_CLASS") && dev.get_property (".INPUT_CLASS") == "joystick")) {
+		var identifier = device.get_device_file ();
+		if ((device.has_property ("ID_INPUT_JOYSTICK") && device.get_property ("ID_INPUT_JOYSTICK") == "1") ||
+		    (device.has_property (".INPUT_CLASS") && device.get_property (".INPUT_CLASS") == "joystick")) {
 			switch (action) {
 			case "add":
 				RawGamepad raw_gamepad;
@@ -51,13 +51,13 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 		}
 	}
 
-	private void initial_device_iterator (GUdev.Device dev) {
-		if (dev.get_device_file () == null)
+	private void initial_device_iterator (GUdev.Device device) {
+		if (device.get_device_file () == null)
 			return;
 
-		var identifier = dev.get_device_file ();
-		if ((dev.has_property ("ID_INPUT_JOYSTICK") && dev.get_property ("ID_INPUT_JOYSTICK") == "1") ||
-		    (dev.has_property (".INPUT_CLASS") && dev.get_property (".INPUT_CLASS") == "joystick")) {
+		var identifier = device.get_device_file ();
+		if ((device.has_property ("ID_INPUT_JOYSTICK") && device.get_property ("ID_INPUT_JOYSTICK") == "1") ||
+		    (device.has_property (".INPUT_CLASS") && device.get_property (".INPUT_CLASS") == "joystick")) {
 			RawGamepad raw_gamepad;
 			try {
 				raw_gamepad = new LinuxRawGamepad (identifier);

@@ -18,11 +18,11 @@ public class LibGamepad.Mapping : Object {
 	private int[] axes_value;
 	private Dpad[] dpads;
 
-	public Mapping.from_sdl_string (string? mappingstring) throws MappingError {
-		if (mappingstring == null || mappingstring == "")
-			throw new MappingError.NOT_A_MAPPING ("mappingstring cannot be null or empty");
+	public Mapping.from_sdl_string (string? mapping_string) throws MappingError {
+		if (mapping_string == null || mapping_string == "")
+			throw new MappingError.NOT_A_MAPPING ("The mapping string can't be null nor empty.");
 
-		var mappings = mappingstring.split (",");
+		var mappings = mapping_string.split (",");
 		foreach (var mapping in mappings) {
 			if (mapping.split (":").length == 2) {
 				var str = mapping.split (":")[0];
