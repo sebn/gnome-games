@@ -30,7 +30,7 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 				RawGamepad raw_gamepad;
 				try {
 					raw_gamepad = new LinuxRawGamepad (identifier);
-				} catch (FileError err) {
+				} catch (FileError e) {
 					return;
 				}
 				raw_gamepads.replace (identifier, raw_gamepad);
@@ -61,7 +61,7 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 			RawGamepad raw_gamepad;
 			try {
 				raw_gamepad = new LinuxRawGamepad (identifier);
-			} catch (FileError err) {
+			} catch (FileError e) {
 				return;
 			}
 			raw_gamepads.replace (identifier, raw_gamepad);

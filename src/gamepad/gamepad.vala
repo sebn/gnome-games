@@ -62,8 +62,8 @@ public class LibGamepad.Gamepad : Object {
 			raw_gamepad.button_event.connect (on_raw_button_event);
 			raw_gamepad.axis_event.connect (on_raw_axis_event);
 			raw_gamepad.dpad_event.connect (on_raw_dpad_event);
-		} catch (MappingError err) {
-			debug ("%s - for %s/%s", err.message, guid, name);
+		} catch (MappingError e) {
+			debug ("%s - for %s/%s", e.message, guid, name);
 			mapping = null;
 			mapped = false;
 		}
