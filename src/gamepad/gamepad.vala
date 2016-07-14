@@ -71,39 +71,30 @@ public class LibGamepad.Gamepad : Object {
 	}
 
 	private void on_raw_button_event (int button, bool value) {
-		InputType type;
-		StandardGamepadAxis output_axis;
-		StandardGamepadButton output_button;
-
-		mapping.get_button_mapping (button, out type, out output_axis, out output_button);
-		emit_event (type, output_axis, output_button, value ? 1 : 0);
+		MappedEvent event;
+		mapping.get_button_mapping (button, out event);
+		emit_event (event, value ? 1 : 0);
 	}
 
 	private void on_raw_axis_event (int axis, double value) {
-		InputType type;
-		StandardGamepadAxis output_axis;
-		StandardGamepadButton output_button;
-
-		mapping.get_axis_mapping (axis, out type, out output_axis, out output_button);
-		emit_event (type, output_axis, output_button, value);
+		MappedEvent event;
+		mapping.get_axis_mapping (axis, out event);
+		emit_event (event, value);
 	}
 
 	private void on_raw_dpad_event (int dpad_index, int axis, int value) {
-		InputType type;
-		StandardGamepadAxis output_axis;
-		StandardGamepadButton output_button;
-
-		mapping.get_dpad_mapping (dpad_index, axis, value, out type, out output_axis, out output_button);
-		emit_event (type, output_axis, output_button, value.abs ());
+		MappedEvent event;
+		mapping.get_dpad_mapping (dpad_index, axis, value, out event);
+		emit_event (event, value.abs ());
 	}
 
-	private void emit_event (InputType type, StandardGamepadAxis axis, StandardGamepadButton button, double value) {
-		switch (type) {
+	private void emit_event (MappedEvent event, double value) {
+		switch (event.type) {
 		case InputType.AXIS:
-			axis_event (axis, value);
+			axis_event (event.axis, value);
 			break;
 		case InputType.BUTTON:
-			button_event (button, (bool) value);
+			button_event (event.button, (bool) value);
 			break;
 		}
 	}

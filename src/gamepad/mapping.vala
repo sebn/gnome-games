@@ -69,9 +69,7 @@ public class LibGamepad.Mapping : Object {
 	public void get_dpad_mapping (int dpad_index,
 	                              int dpad_axis,
 	                              int dpad_value,
-	                              out InputType type,
-	                              out StandardGamepadAxis output_axis,
-	                              out StandardGamepadButton output_button) {
+	                              out MappedEvent event) {
 		int dpad_position;
 		var dpad = dpads[dpad_index];
 		if (dpad_value == 0)
@@ -79,43 +77,37 @@ public class LibGamepad.Mapping : Object {
 		else
 			dpad_position = (dpad_value + dpad_axis + 4) % 4;
 		dpad.axisval[dpad_axis] = dpad_value;
-		type = dpad.types[dpad_position];
-		switch (type) {
+		event.type = dpad.types[dpad_position];
+		switch (event.type) {
 		case InputType.AXIS:
-			output_axis = (StandardGamepadAxis) dpad.values[dpad_position];
+			event.axis = (StandardGamepadAxis) dpad.values[dpad_position];
 			break;
 		case InputType.BUTTON:
-			output_button = (StandardGamepadButton) dpad.values[dpad_position];
+			event.button = (StandardGamepadButton) dpad.values[dpad_position];
 			break;
 		}
 	}
 
-	public void get_axis_mapping (int axis_number,
-	                              out InputType type,
-	                              out StandardGamepadAxis output_axis,
-	                              out StandardGamepadButton output_button) {
-		type = axes_type[axis_number];
-		switch (type) {
+	public void get_axis_mapping (int axis_number, out MappedEvent event) {
+		event.type = axes_type[axis_number];
+		switch (event.type) {
 		case InputType.AXIS:
-			output_axis = (StandardGamepadAxis) axes_value[axis_number];
+			event.axis = (StandardGamepadAxis) axes_value[axis_number];
 			break;
 		case InputType.BUTTON:
-			output_button = (StandardGamepadButton) axes_value[axis_number];
+			event.button = (StandardGamepadButton) axes_value[axis_number];
 			break;
 		}
 	}
 
-	public void get_button_mapping (int button_number,
-	                                out InputType type,
-	                                out StandardGamepadAxis output_axis,
-	                                out StandardGamepadButton output_button) {
-		type = buttons_type[button_number];
-		switch (type) {
+	public void get_button_mapping (int button_number, out MappedEvent event) {
+		event.type = buttons_type[button_number];
+		switch (event.type) {
 		case InputType.AXIS:
-			output_axis = (StandardGamepadAxis) buttons_value[button_number];
+			event.axis = (StandardGamepadAxis) buttons_value[button_number];
 			break;
 		case InputType.BUTTON:
-			output_button = (StandardGamepadButton) buttons_value[button_number];
+			event.button = (StandardGamepadButton) buttons_value[button_number];
 			break;
 		}
 	}
