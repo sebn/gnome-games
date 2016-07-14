@@ -68,6 +68,8 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 			return null;
 
 		raw_gamepads.insert (identifier, raw_gamepad);
+
+		return raw_gamepad;
 	}
 
 	private RawGamepad? remove_gamepad (GUdev.Device device) {
@@ -80,7 +82,7 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 		return raw_gamepad;
 	}
 
-	private bool is_gamepad (GUdev.Device device) {
+	private static bool is_gamepad (GUdev.Device device) {
 		if ((device.has_property ("ID_INPUT_JOYSTICK") && device.get_property ("ID_INPUT_JOYSTICK") == "1") ||
 		    (device.has_property (".INPUT_CLASS") && device.get_property (".INPUT_CLASS") == "joystick"))
 			return true;
