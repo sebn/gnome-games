@@ -2,11 +2,6 @@
 
 /**
  * This is one of the interfaces that needs to be implemented by the driver.
- *
- * This interface deals with handling events related to plugging and unplugging
- * of gamepads and also provides a method to iterate through all the plugged in
- * gamepads. An identifier is a string that is easily understood by the driver
- * and may depend on other factors, i.e. it may not be unique for the gamepad.
  */
 public interface LibGamepad.RawGamepadMonitor : Object {
 	/**

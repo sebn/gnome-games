@@ -6,9 +6,6 @@
  * This interface represents a gamepad and deals with handling events that are
  * emitted by a gamepad and also provide properties like name and guid along
  * with number of buttons, axes and dpads.
- *
- * The constructor takes a identifier as a parameter.
- * @see RawGamepadMonitor
  */
 public interface LibGamepad.RawGamepad : Object {
 	/**
@@ -38,7 +35,6 @@ public interface LibGamepad.RawGamepad : Object {
 	 */
 	public abstract signal void unplugged ();
 
-	public abstract string identifier { get; }
 	public abstract string name { get; }
 	public abstract string guid { get; }
 

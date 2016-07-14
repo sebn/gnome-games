@@ -8,9 +8,7 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 	private uint8 key_map[Linux.Input.KEY_MAX];
 	private uint8 abs_map[Linux.Input.ABS_MAX];
 	private Linux.Input.AbsInfo abs_info[Linux.Input.ABS_MAX];
-
-	private string _identifier;
-	public string identifier { get { return _identifier; } }
+	private string identifier;
 
 	private string _name;
 	public string name { get { return _name; } }
@@ -47,7 +45,7 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 	}
 
 	public LinuxRawGamepad (string file_name) throws FileError {
-		_identifier = file_name;
+		identifier = file_name;
 		fd = Posix.open (file_name, Posix.O_RDONLY | Posix.O_NONBLOCK);
 
 		if (fd < 0)
