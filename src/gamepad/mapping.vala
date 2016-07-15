@@ -1,12 +1,12 @@
 // This file is part of GNOME Games. License: GPLv3
 
-private class LibGamepad.Dpad : Object {
+private class LibGamepad.DPad : Object {
 	public InputType types[4];
 	public int values[4];
-	public int axisval[2];
+	public int axis_values[2];
 
-	public Dpad () {
-		axisval[0] = axisval[1] = 0;
+	public DPad () {
+		axis_values[0] = axis_values[1] = 0;
 		types[0] = types[1] = types[2] = types[3] = InputType.INVALID;
 	}
 }
@@ -16,7 +16,7 @@ public class LibGamepad.Mapping : Object {
 	private int[] buttons_value;
 	private InputType[] axes_type;
 	private int[] axes_value;
-	private Dpad[] dpads;
+	private DPad[] dpads;
 
 	public Mapping.from_sdl_string (string? mapping_string) throws MappingError {
 		if (mapping_string == null || mapping_string == "")
@@ -46,7 +46,7 @@ public class LibGamepad.Mapping : Object {
 						dpad_position++;
 					}
 					while (dpads.length <= dpad_index)
-						dpads += new Dpad ();
+						dpads += new DPad ();
 					dpads[dpad_index].types[dpad_position] = type;
 					dpads[dpad_index].values[dpad_position] = value;
 
@@ -81,10 +81,10 @@ public class LibGamepad.Mapping : Object {
 		int dpad_position;
 		var dpad = dpads[dpad_index];
 		if (dpad_value == 0)
-			dpad_position = (dpad.axisval[dpad_axis] + dpad_axis + 4) % 4;
+			dpad_position = (dpad.axis_values[dpad_axis] + dpad_axis + 4) % 4;
 		else
 			dpad_position = (dpad_value + dpad_axis + 4) % 4;
-		dpad.axisval[dpad_axis] = dpad_value;
+		dpad.axis_values[dpad_axis] = dpad_value;
 		event.type = dpad.types[dpad_position];
 		switch (event.type) {
 		case InputType.AXIS:
