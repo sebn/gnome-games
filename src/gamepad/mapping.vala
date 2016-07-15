@@ -24,66 +24,68 @@ public class LibGamepad.Mapping : Object {
 
 		var mappings = mapping_string.split (",");
 		foreach (var mapping in mappings) {
-			if (mapping.split (":").length == 2) {
-				var mapping_key = mapping.split (":")[0];
-				var mapping_value = mapping.split (":")[1];
-				var type = parse_input_type (mapping_key);
-				if (type == InputType.INVALID) {
-					if (mapping_key != "platform")
-						debug ("Invalid token : %s", mapping_key);
+			var splitted_mapping = mapping.split (":");
+			if (splitted_mapping.length != 2)
+				continue;
 
-					continue;
+			var mapping_key = mapping.split (":")[0];
+			var mapping_value = mapping.split (":")[1];
+			var type = parse_input_type (mapping_key);
+			if (type == InputType.INVALID) {
+				if (mapping_key != "platform")
+					debug ("Invalid token : %s", mapping_key);
+
+				continue;
+			}
+			int parsed_value;
+			switch (type) {
+			case InputType.BUTTON:
+				parsed_value = parse_button (mapping_key);
+
+				break;
+			case InputType.AXIS:
+				parsed_value = parse_axis (mapping_key);
+
+				break;
+			default:
+				continue;
+			}
+			switch (mapping_value[0]) {
+			case 'h':
+				var dpad_parse_array = mapping_value[1:mapping_value.length].split (".");
+				var dpad_index = int.parse (dpad_parse_array[0]);
+				var dpad_position_2pow = int.parse (dpad_parse_array[1]);
+				int dpad_position = 0;
+				while (dpad_position_2pow > 1) {
+					dpad_position_2pow >>= 1;
+					dpad_position++;
 				}
-				int parsed_value;
-				switch (type) {
-				case InputType.BUTTON:
-					parsed_value = parse_button (mapping_key);
+				while (dpads.length <= dpad_index)
+					dpads += new DPad ();
+				dpads[dpad_index].types[dpad_position] = type;
+				dpads[dpad_index].values[dpad_position] = parsed_value;
 
-					break;
-				case InputType.AXIS:
-					parsed_value = parse_axis (mapping_key);
+				break;
+			case 'b':
+				var button = int.parse (mapping_value[1:mapping_value.length]);
+				while (buttons_type.length <= button)
+					buttons_type += InputType.INVALID;
+				if (buttons_value.length <= button)
+					buttons_value.resize (button + 1);
+				buttons_type[button] = type;
+				buttons_value[button] = parsed_value;
 
-					break;
-				default:
-					continue;
-				}
-				switch (mapping_value[0]) {
-				case 'h':
-					var dpad_parse_array = mapping_value[1:mapping_value.length].split (".");
-					var dpad_index = int.parse (dpad_parse_array[0]);
-					var dpad_position_2pow = int.parse (dpad_parse_array[1]);
-					int dpad_position = 0;
-					while (dpad_position_2pow > 1) {
-						dpad_position_2pow >>= 1;
-						dpad_position++;
-					}
-					while (dpads.length <= dpad_index)
-						dpads += new DPad ();
-					dpads[dpad_index].types[dpad_position] = type;
-					dpads[dpad_index].values[dpad_position] = parsed_value;
+				break;
+			case 'a':
+				var axis = int.parse (mapping_value[1:mapping_value.length]);
+				while (axes_type.length <= axis)
+					axes_type += InputType.INVALID;
+				if (axes_value.length <= axis)
+					axes_value.resize (axis + 1);
+				axes_type[axis] = type;
+				axes_value[axis] = parsed_value;
 
-					break;
-				case 'b':
-					var button = int.parse (mapping_value[1:mapping_value.length]);
-					while (buttons_type.length <= button)
-						buttons_type += InputType.INVALID;
-					if (buttons_value.length <= button)
-						buttons_value.resize (button + 1);
-					buttons_type[button] = type;
-					buttons_value[button] = parsed_value;
-
-					break;
-				case 'a':
-					var axis = int.parse (mapping_value[1:mapping_value.length]);
-					while (axes_type.length <= axis)
-						axes_type += InputType.INVALID;
-					if (axes_value.length <= axis)
-						axes_value.resize (axis + 1);
-					axes_type[axis] = type;
-					axes_value[axis] = parsed_value;
-
-					break;
-				}
+				break;
 			}
 		}
 	}
