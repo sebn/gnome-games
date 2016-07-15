@@ -56,20 +56,20 @@ public class LibGamepad.Gamepad : Object {
 
 	private void on_raw_button_event (int button, bool value) {
 		var event = mapping.get_button_mapping (button);
-		emit_event (event, value ? 1 : 0);
+		switch (event.type) {
+		case InputType.AXIS:
+			axis_event (event.axis, value ? 1 : 0);
+
+			break;
+		case InputType.BUTTON:
+			button_event (event.button, value);
+
+			break;
+		}
 	}
 
 	private void on_raw_axis_event (int axis, double value) {
 		var event = mapping.get_axis_mapping (axis);
-		emit_event (event, value);
-	}
-
-	private void on_raw_dpad_event (int dpad_index, int axis, int value) {
-		var event = mapping.get_dpad_mapping (dpad_index, axis, value);
-		emit_event (event, value.abs ());
-	}
-
-	private void emit_event (MappedEvent event, double value) {
 		switch (event.type) {
 		case InputType.AXIS:
 			axis_event (event.axis, value);
@@ -77,6 +77,20 @@ public class LibGamepad.Gamepad : Object {
 			break;
 		case InputType.BUTTON:
 			button_event (event.button, (bool) value);
+
+			break;
+		}
+	}
+
+	private void on_raw_dpad_event (int dpad_index, int axis, int value) {
+		var event = mapping.get_dpad_mapping (dpad_index, axis, value);
+		switch (event.type) {
+		case InputType.AXIS:
+			axis_event (event.axis, value.abs ());
+
+			break;
+		case InputType.BUTTON:
+			button_event (event.button, (bool) value.abs ());
 
 			break;
 		}
