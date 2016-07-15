@@ -1,8 +1,6 @@
 // This file is part of GNOME Games. License: GPLv3
 
 private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
-	public delegate void RawGamepadCallback (RawGamepad raw_gamepad);
-
 	private static LinuxRawGamepadMonitor instance;
 
 	private GUdev.Client client;

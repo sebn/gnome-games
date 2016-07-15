@@ -12,9 +12,6 @@ public class LibGamepad.GamepadMonitor : Object {
 	 */
 	public signal void gamepad_plugged (Gamepad gamepad);
 
-	public delegate void GamepadCallback (Gamepad gamepad);
-	public delegate void RawGamepadCallback (RawGamepad raw_gamepad);
-
 	private static GamepadMonitor instance;
 
 	private GenericSet<Gamepad?> gamepads;

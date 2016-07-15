@@ -10,8 +10,6 @@ public interface LibGamepad.RawGamepadMonitor : Object {
 	 */
 	public abstract signal void gamepad_plugged (RawGamepad raw_gamepad);
 
-	public delegate void RawGamepadCallback (RawGamepad raw_gamepad);
-
 	/**
 	 * This function allows to iterate over all gamepads
 	 * @param   callback            The callback
