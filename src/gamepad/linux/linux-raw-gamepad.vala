@@ -127,9 +127,8 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 			int code = ev.code;
 			switch (ev.type) {
 			case Linux.Input.EV_KEY:
-				if (code >= Linux.Input.BTN_MISC) {
+				if (code >= Linux.Input.BTN_MISC)
 					button_event (key_map[code - Linux.Input.BTN_MISC], (bool) ev.value);
-				}
 
 				break;
 			case Linux.Input.EV_ABS:
