@@ -16,12 +16,10 @@ private class Games.RetroInputManager : Object {
 		input.set_keyboard (new RetroGtk.Keyboard (widget));
 
 		gamepad_monitor.foreach_gamepad ((gamepad) => {
-			if (gamepad.mapped) {
-				var port = is_port_plugged.length;
-				is_port_plugged += true;
-				input.set_controller_device (port, new RetroGamepad (gamepad));
-				gamepad.unplugged.connect (() => handle_gamepad_unplugged (port));
-			}
+			var port = is_port_plugged.length;
+			is_port_plugged += true;
+			input.set_controller_device (port, new RetroGamepad (gamepad));
+			gamepad.unplugged.connect (() => handle_gamepad_unplugged (port));
 		});
 
 		keyboard_port = is_port_plugged.length;
@@ -31,9 +29,6 @@ private class Games.RetroInputManager : Object {
 	}
 
 	private void handle_gamepad_plugged (LibGamepad.Gamepad gamepad) {
-		if (!gamepad.mapped)
-			return;
-
 		// Plug this gamepad to the port where the keyboard was plugged as a last resort
 		var port = keyboard_port;
 		gamepad.unplugged.connect (() => handle_gamepad_unplugged (port));

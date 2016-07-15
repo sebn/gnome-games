@@ -92,7 +92,7 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 
 		// Get info about axes
 		for (var i = 0; i < Linux.Input.ABS_MAX; i++) {
-			/* Skip dpads */
+			// Skip dpads
 			if (i == Linux.Input.ABS_HAT0X) {
 				i = Linux.Input.ABS_HAT3Y;
 

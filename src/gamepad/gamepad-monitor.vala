@@ -13,10 +13,12 @@ public class LibGamepad.GamepadMonitor : Object {
 	public signal void gamepad_plugged (Gamepad gamepad);
 
 	public delegate void GamepadCallback (Gamepad gamepad);
+	public delegate void RawGamepadCallback (RawGamepad raw_gamepad);
 
 	private static GamepadMonitor instance;
 
 	private GenericSet<Gamepad?> gamepads;
+	private GenericSet<RawGamepad?> unmapped_raw_gamepads;
 
 	private GamepadMonitor () {
 		if (gamepads == null)
@@ -43,17 +45,31 @@ public class LibGamepad.GamepadMonitor : Object {
 			callback (gamepad);
 	}
 
-	private Gamepad add_gamepad (RawGamepad raw_gamepad) {
-		var gamepad = new Gamepad (raw_gamepad);
-		gamepads.add (gamepad);
-		gamepad.unplugged.connect (remove_gamepad);
+	/**
+	 * This function allows to iterate over all unmapped gamepads
+	 * @param    callback          The callback
+	 */
+	public void foreach_unmapped_gamepad (RawGamepadCallback callback) {
+		foreach (var raw_gamepad in unmapped_raw_gamepads)
+			callback (raw_gamepad);
+	}
 
-		return gamepad;
+	private Gamepad? add_gamepad (RawGamepad raw_gamepad) {
+		try {
+			var gamepad = new Gamepad (raw_gamepad);
+			gamepads.add (gamepad);
+			gamepad.unplugged.connect (remove_gamepad);
+			return gamepad;
+		} catch (MappingError e) {
+			unmapped_raw_gamepads.add (raw_gamepad);
+			return null;
+		}
 	}
 
 	private void on_raw_gamepad_plugged (RawGamepad raw_gamepad) {
 		var gamepad = add_gamepad (raw_gamepad);
-		gamepad_plugged (gamepad);
+		if (gamepad != null)
+			gamepad_plugged (gamepad);
 	}
 
 	private void remove_gamepad (Gamepad gamepad) {

@@ -91,6 +91,6 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 
 	private static bool is_gamepad (GUdev.Device device) {
 		return ((device.has_property ("ID_INPUT_JOYSTICK") && device.get_property ("ID_INPUT_JOYSTICK") == "1") ||
-		        (device.has_property (".INPUT_CLASS") && device.get_property (".INPUT_CLASS") == "joystick"))
+		        (device.has_property (".INPUT_CLASS") && device.get_property (".INPUT_CLASS") == "joystick"));
 	}
 }
