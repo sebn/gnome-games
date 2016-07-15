@@ -35,7 +35,7 @@ public class LibGamepad.Gamepad : Object {
 	/**
 	 * The raw gamepad behind this gamepad
 	 */
-	public RawGamepad raw_gamepad { get; private set; }
+	private RawGamepad raw_gamepad;
 
 	/**
 	 * The mapping object
