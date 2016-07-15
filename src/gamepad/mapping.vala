@@ -25,19 +25,28 @@ public class LibGamepad.Mapping : Object {
 		var mappings = mapping_string.split (",");
 		foreach (var mapping in mappings) {
 			if (mapping.split (":").length == 2) {
-				var str = mapping.split (":")[0];
-				var real = mapping.split (":")[1];
-				var type = map_type (str);
+				var mapping_key = mapping.split (":")[0];
+				var mapping_value = mapping.split (":")[1];
+				var type = parse_input_type (mapping_key);
 				if (type == InputType.INVALID) {
-					if (str != "platform")
-						debug ("Invalid token : %s", str);
+					if (mapping_key != "platform")
+						debug ("Invalid token : %s", mapping_key);
 
 					continue;
 				}
-				var value = map_value (str);
-				switch (real[0]) {
+				switch (type) {
+				case InputType.BUTTON:
+					var value = parse_button (mapping_key);
+
+					break;
+				case InputType.AXIS:
+					var value = parse_axis (mapping_key);
+
+					break;
+				}
+				switch (mapping_value[0]) {
 				case 'h':
-					var dpad_parse_array = real[1:real.length].split (".");
+					var dpad_parse_array = mapping_value[1:mapping_value.length].split (".");
 					var dpad_index = int.parse (dpad_parse_array[0]);
 					var dpad_position_2pow = int.parse (dpad_parse_array[1]);
 					int dpad_position = 0;
@@ -52,7 +61,7 @@ public class LibGamepad.Mapping : Object {
 
 					break;
 				case 'b':
-					var button = int.parse (real[1:real.length]);
+					var button = int.parse (mapping_value[1:mapping_value.length]);
 					while (buttons_type.length <= button)
 						buttons_type += InputType.INVALID;
 					if (buttons_value.length <= button)
@@ -62,7 +71,7 @@ public class LibGamepad.Mapping : Object {
 
 					break;
 				case 'a':
-					var axis = int.parse (real[1:real.length]);
+					var axis = int.parse (mapping_value[1:mapping_value.length]);
 					while (axes_type.length <= axis)
 						axes_type += InputType.INVALID;
 					if (axes_value.length <= axis)
@@ -134,8 +143,8 @@ public class LibGamepad.Mapping : Object {
 		return event;
 	}
 
-	public static InputType map_type (string str) {
-		switch (str) {
+	public static InputType parse_input_type (string mapping_string) {
+		switch (mapping_string) {
 		case "leftx":
 		case "lefty":
 		case "rightx":
@@ -164,8 +173,8 @@ public class LibGamepad.Mapping : Object {
 		}
 	}
 
-	public static int map_value (string str) {
-		switch (str) {
+	public static StandardGamepadAxis parse_axis (string mapping_string) {
+		switch (mapping_string) {
 		case "leftx":
 			return StandardGamepadAxis.LEFT_X;
 		case "lefty":
@@ -174,6 +183,13 @@ public class LibGamepad.Mapping : Object {
 			return StandardGamepadAxis.RIGHT_X;
 		case "righty":
 			return StandardGamepadAxis.RIGHT_Y;
+		default:
+			return StandardGamepadButton.UNKNOWN;
+		}
+	}
+
+	public static StandardGamepadButton parse_button (string mapping_string) {
+		switch (mapping_string) {
 		case "a":
 			return StandardGamepadButton.A;
 		case "b":

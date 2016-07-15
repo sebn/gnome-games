@@ -30,4 +30,9 @@ public enum LibGamepad.StandardGamepadAxis {
 	 * Negative is up, positive is down.
 	 */
 	RIGHT_Y,
+
+	/**
+	 * An unknown axis
+	 */
+	UNKNOWN,
 }
