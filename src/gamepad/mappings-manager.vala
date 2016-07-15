@@ -65,8 +65,8 @@ public class LibGamepad.MappingsManager : Object {
 
 		if (mappingstr.index_of ("platform") == -1 || mappingstr.index_of ("platform:Linux") != -1) {
 			var split = mappingstr.split (",", 3);
-			names.replace (split[0], split[1]);
-			mappings.replace (split[0], split[2]);
+			names[split[0]] = split[1];
+			mappings[split[0]] = split[2];
 		}
 	}
 
@@ -77,7 +77,7 @@ public class LibGamepad.MappingsManager : Object {
 	 * @return The name if present in the database
 	 */
 	public string? get_name (string guid) {
-		return names.get (guid);
+		return names[guid];
 	}
 
 
@@ -87,6 +87,6 @@ public class LibGamepad.MappingsManager : Object {
 	 * @return The mapping if present in the database
 	 */
 	public string? get_mapping (string guid) {
-		return mappings.get (guid);
+		return mappings[guid];
 	}
 }

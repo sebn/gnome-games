@@ -73,7 +73,7 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 		if (raw_gamepads.contains (identifier))
 			return null;
 
-		raw_gamepads.insert (identifier, raw_gamepad);
+		raw_gamepads[identifier] = raw_gamepad;
 
 		return raw_gamepad;
 	}
@@ -83,7 +83,7 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 		if (!raw_gamepads.contains (identifier))
 			return null;
 
-		var raw_gamepad = raw_gamepads.get (identifier);
+		var raw_gamepad = raw_gamepads[identifier];
 		raw_gamepads.remove (identifier);
 
 		return raw_gamepad;
