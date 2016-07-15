@@ -17,16 +17,13 @@ public class LibGamepad.GamepadMonitor : Object {
 	private static GamepadMonitor instance;
 
 	private SList <Gamepad> gamepads;
-	private RawGamepadMonitor raw_gamepad_monitor;
 
 	private GamepadMonitor () {
 		if (gamepads == null)
 			gamepads = new SList <Gamepad> ();
 
-		raw_gamepad_monitor = LinuxRawGamepadMonitor.get_instance ();
-
+		var raw_gamepad_monitor = LinuxRawGamepadMonitor.get_instance ();
 		raw_gamepad_monitor.gamepad_plugged.connect (on_raw_gamepad_plugged);
-
 		raw_gamepad_monitor.foreach_gamepad ((raw_gamepad) => add_gamepad (raw_gamepad));
 	}
 
@@ -42,18 +39,24 @@ public class LibGamepad.GamepadMonitor : Object {
 	 * @param    callback          The callback
 	 */
 	public void foreach_gamepad (GamepadCallback callback) {
-		gamepads.foreach ((gamepad) => callback (gamepad));
+		foreach (var gamepad in gamepads)
+			callback (gamepad);
 	}
 
 	private Gamepad add_gamepad (RawGamepad raw_gamepad) {
 		var gamepad = new Gamepad (raw_gamepad);
 		gamepads.append (gamepad);
-		gamepad.unplugged.connect (() => gamepads.remove (gamepad));
+		gamepad.unplugged.connect (remove_gamepad);
 
 		return gamepad;
 	}
 
 	private void on_raw_gamepad_plugged (RawGamepad raw_gamepad) {
-		gamepad_plugged (add_gamepad (raw_gamepad));
+		var gamepad = add_gamepad (raw_gamepad);
+		gamepad_plugged (gamepad);
+	}
+
+	private void remove_gamepad (Gamepad gamepad) {
+		gamepads.remove (gamepad);
 	}
 }
