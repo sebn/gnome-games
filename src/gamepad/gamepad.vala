@@ -40,7 +40,7 @@ public class LibGamepad.Gamepad : Object {
 	/**
 	 * The mapping object
 	 */
-	public Mapping? mapping { get; private set; }
+	private Mapping? mapping;
 
 	public Gamepad (RawGamepad raw_gamepad) throws FileError, MappingError {
 		this.raw_gamepad = raw_gamepad;
