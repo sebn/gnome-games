@@ -1,6 +1,9 @@
 // This file is part of GNOME Games. License: GPLv3
 
+
 private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
+	private const int GUID_LENGTH = 8;
+
 	private int fd;
 	private uint? event_source_id;
 	private Libevdev.Evdev device;
@@ -22,7 +25,7 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 	public string guid {
 		get {
 			if (_guid == null) {
-				uint16 guid_array[8];
+				uint16 guid_array[GUID_LENGTH];
 				guid_array[0] = (uint16) device.id_bustype.to_little_endian ();
 				guid_array[1] = 0;
 				guid_array[2] = (uint16) device.id_vendor.to_little_endian ();
@@ -163,5 +166,24 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 
 		Source.remove (event_source_id);
 		event_source_id = null;
+	}
+
+	private string uint16s_to_hex_string (uint16[] data)
+				   requires (data.length == GUID_LENGTH)
+	{
+		const string hex_to_ascii_map = "0123456789abcdef";
+
+		var builder = new StringBuilder ();
+		foreach (uint16 el in data) {
+			uint8 c = (uint8) el;
+			builder.append_unichar (hex_to_ascii_map[c >> 4]);
+			builder.append_unichar (hex_to_ascii_map[c & 0x0F]);
+
+			c = (uint8) (el >> 8);
+			builder.append_unichar (hex_to_ascii_map[c >> 4]);
+			builder.append_unichar (hex_to_ascii_map[c & 0x0F]);
+		}
+
+		return builder.str;
 	}
 }
