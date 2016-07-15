@@ -16,11 +16,11 @@ public class LibGamepad.GamepadMonitor : Object {
 
 	private static GamepadMonitor instance;
 
-	private SList <Gamepad> gamepads;
+	private GenericSet<Gamepad> gamepads;
 
 	private GamepadMonitor () {
 		if (gamepads == null)
-			gamepads = new SList <Gamepad> ();
+			gamepads = new GenericSet<Gamepad> (direct_hash, direct_equal);
 
 		var raw_gamepad_monitor = LinuxRawGamepadMonitor.get_instance ();
 		raw_gamepad_monitor.gamepad_plugged.connect (on_raw_gamepad_plugged);
@@ -45,7 +45,7 @@ public class LibGamepad.GamepadMonitor : Object {
 
 	private Gamepad add_gamepad (RawGamepad raw_gamepad) {
 		var gamepad = new Gamepad (raw_gamepad);
-		gamepads.append (gamepad);
+		gamepads.add (gamepad);
 		gamepad.unplugged.connect (remove_gamepad);
 
 		return gamepad;
