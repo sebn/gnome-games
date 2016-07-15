@@ -29,7 +29,8 @@ public class LibGamepad.Mapping : Object {
 				var real = mapping.split (":")[1];
 				var type = map_type (str);
 				if (type == InputType.INVALID) {
-					if (str != "platform") debug ("Invalid token : %s", str);
+					if (str != "platform")
+						debug ("Invalid token : %s", str);
 
 					continue;
 				}
@@ -44,23 +45,28 @@ public class LibGamepad.Mapping : Object {
 						dpad_position_2pow >>= 1;
 						dpad_position++;
 					}
-					while (dpads.length <= dpad_index) dpads += new Dpad ();
+					while (dpads.length <= dpad_index)
+						dpads += new Dpad ();
 					dpads[dpad_index].types[dpad_position] = type;
 					dpads[dpad_index].values[dpad_position] = value;
 
 					break;
 				case 'b':
 					var button = int.parse (real[1:real.length]);
-					while (buttons_type.length <= button) buttons_type += InputType.INVALID;
-					if (buttons_value.length <= button) buttons_value.resize (button + 1);
+					while (buttons_type.length <= button)
+						buttons_type += InputType.INVALID;
+					if (buttons_value.length <= button)
+						buttons_value.resize (button + 1);
 					buttons_type[button] = type;
 					buttons_value[button] = value;
 
 					break;
 				case 'a':
 					var axis = int.parse (real[1:real.length]);
-					while (axes_type.length <= axis) axes_type += InputType.INVALID;
-					if (axes_value.length <= axis) axes_value.resize (axis + 1);
+					while (axes_type.length <= axis)
+						axes_type += InputType.INVALID;
+					if (axes_value.length <= axis)
+						axes_value.resize (axis + 1);
 					axes_type[axis] = type;
 					axes_value[axis] = value;
 
