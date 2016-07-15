@@ -28,11 +28,6 @@ public class LibGamepad.Gamepad : Object {
 
 
 	/**
-	 * The guid
-	 */
-	public string? guid { get; private set; }
-
-	/**
 	 * The name present in our database
 	 */
 	public string? name { get; private set; }
@@ -54,7 +49,7 @@ public class LibGamepad.Gamepad : Object {
 
 	public Gamepad (RawGamepad raw_gamepad) throws FileError {
 		this.raw_gamepad = raw_gamepad;
-		guid = raw_gamepad.guid;
+		var guid = raw_gamepad.guid;
 		name = MappingsManager.get_name (guid) ?? raw_gamepad.name;
 		try {
 			mapping = new Mapping.from_sdl_string (MappingsManager.get_mapping (guid));
