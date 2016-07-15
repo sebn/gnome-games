@@ -9,9 +9,7 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 	private uint8 abs_map[Linux.Input.ABS_MAX];
 	private Linux.Input.AbsInfo abs_info[Linux.Input.ABS_MAX];
 	private string identifier;
-
-	private string _name;
-	public string name { get { return _name; } }
+	public string name { get { return device.name; } }
 
 	private uint8 _axes_number = 0;
 	public uint8 axes_number { get { return _axes_number; } }
@@ -72,8 +70,6 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 		device = new Libevdev.Evdev ();
 		if (device.set_fd (fd) < 0)
 			throw new FileError.FAILED (@"Evdev is unable to open $file_name: $(Posix.strerror (Posix.errno))");
-
-		_name = device.name;
 
 		// Poll the events in the default main loop
 		var channel = new IOChannel.unix_new (fd);
