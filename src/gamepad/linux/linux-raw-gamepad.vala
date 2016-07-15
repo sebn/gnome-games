@@ -18,10 +18,10 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 	public uint8 buttons_number { get { return _buttons_number; } }
 
 
-	private string _guid = "";
+	private string _guid;
 	public string guid {
 		get {
-			if (_guid == "") {
+			if (_guid == null) {
 				uint16 guid_array[8];
 				guid_array[0] = (uint16) device.id_bustype.to_little_endian ();
 				guid_array[1] = 0;
