@@ -50,9 +50,10 @@ public class LibGamepad.Gamepad : Object {
 	public Gamepad (RawGamepad raw_gamepad) throws FileError {
 		this.raw_gamepad = raw_gamepad;
 		var guid = raw_gamepad.guid;
-		name = MappingsManager.get_name (guid) ?? raw_gamepad.name;
+		var mappings_manager = MappingsManager.get_instance ();
+		name = mappings_manager.get_name (guid) ?? raw_gamepad.name;
 		try {
-			mapping = new Mapping.from_sdl_string (MappingsManager.get_mapping (guid));
+			mapping = new Mapping.from_sdl_string (mappings_manager.get_mapping (guid));
 			mapped = true;
 			raw_gamepad.button_event.connect (on_raw_button_event);
 			raw_gamepad.axis_event.connect (on_raw_axis_event);
