@@ -34,15 +34,18 @@ public class LibGamepad.Mapping : Object {
 
 					continue;
 				}
+				int parsed_value;
 				switch (type) {
 				case InputType.BUTTON:
-					var value = parse_button (mapping_key);
+					parsed_value = parse_button (mapping_key);
 
 					break;
 				case InputType.AXIS:
-					var value = parse_axis (mapping_key);
+					parsed_value = parse_axis (mapping_key);
 
 					break;
+				default:
+					continue;
 				}
 				switch (mapping_value[0]) {
 				case 'h':
@@ -57,7 +60,7 @@ public class LibGamepad.Mapping : Object {
 					while (dpads.length <= dpad_index)
 						dpads += new DPad ();
 					dpads[dpad_index].types[dpad_position] = type;
-					dpads[dpad_index].values[dpad_position] = value;
+					dpads[dpad_index].values[dpad_position] = parsed_value;
 
 					break;
 				case 'b':
@@ -67,7 +70,7 @@ public class LibGamepad.Mapping : Object {
 					if (buttons_value.length <= button)
 						buttons_value.resize (button + 1);
 					buttons_type[button] = type;
-					buttons_value[button] = value;
+					buttons_value[button] = parsed_value;
 
 					break;
 				case 'a':
@@ -77,7 +80,7 @@ public class LibGamepad.Mapping : Object {
 					if (axes_value.length <= axis)
 						axes_value.resize (axis + 1);
 					axes_type[axis] = type;
-					axes_value[axis] = value;
+					axes_value[axis] = parsed_value;
 
 					break;
 				}
@@ -184,7 +187,7 @@ public class LibGamepad.Mapping : Object {
 		case "righty":
 			return StandardGamepadAxis.RIGHT_Y;
 		default:
-			return StandardGamepadButton.UNKNOWN;
+			return StandardGamepadAxis.UNKNOWN;
 		}
 	}
 
