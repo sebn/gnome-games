@@ -50,10 +50,9 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 			break;
 		case "remove":
 			var raw_gamepad = remove_gamepad (device);
-			if (raw_gamepad != null) {
+			if (raw_gamepad != null)
 				// This signal is emitted from here to simplify the code
 				raw_gamepad.unplugged ();
-			}
 
 			break;
 		}

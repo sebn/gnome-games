@@ -7,7 +7,9 @@
  */
 public class LibGamepad.GamepadMonitor : Object {
 	/**
-	 * Emitted when a gamepad is plugged in
+	 * Emitted when a gamepad is plugged in.
+	 * This would be emitted once even if RawGamepadMonitor emits it multiple
+	 * times
 	 * @param  gamepad    The gamepad
 	 */
 	public signal void gamepad_plugged (Gamepad gamepad);
@@ -49,11 +51,14 @@ public class LibGamepad.GamepadMonitor : Object {
 
 		gamepads.add (gamepad);
 		gamepad.unplugged.connect (remove_gamepad);
+
 		return gamepad;
 	}
 
 	private void on_raw_gamepad_plugged (RawGamepad raw_gamepad) {
 		var gamepad = add_gamepad (raw_gamepad);
+
+		// To emit only once even if RawGamepadMonitor emits it multiple times
 		if (gamepad != null)
 			gamepad_plugged (gamepad);
 	}

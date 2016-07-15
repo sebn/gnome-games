@@ -2,7 +2,6 @@
 
 [CCode (cheader_filename = "libevdev/libevdev.h")]
 namespace Libevdev {
-
 	[CCode (cname = "libevdev_read_flag", cprefix = "LIBEVDEV_READ_FLAG_", has_type_id = false)]
 	[Flags]
 	public enum ReadFlag {
@@ -35,5 +34,4 @@ namespace Libevdev {
 
 		public static unowned string event_code_get_name(uint type, uint code);
 	}
-
 }
