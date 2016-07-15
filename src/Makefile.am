@@ -55,7 +55,6 @@ gnome_games_SOURCES = \
 	\
 	gamepad/raw-gamepad-monitor.vala \
 	gamepad/raw-gamepad.vala \
-	gamepad/linux/linux-guid-helpers.vala \
 	gamepad/linux/linux-raw-gamepad-monitor.vala \
 	gamepad/linux/linux-raw-gamepad.vala \
 	gamepad/gamepad-monitor.vala \

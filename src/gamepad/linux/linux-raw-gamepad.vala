@@ -13,14 +13,32 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 	private string _name;
 	public string name { get { return _name; } }
 
-	private string _guid;
-	public string guid { get { return _guid; } }
-
 	private uint8 _axes_number = 0;
 	public uint8 axes_number { get { return _axes_number; } }
 
 	private uint8 _buttons_number = 0;
 	public uint8 buttons_number { get { return _buttons_number; } }
+
+
+	private string _guid = "";
+	public string guid {
+		get {
+			if (_guid == "") {
+				uint16 guid_array[8];
+				guid_array[0] = (uint16) device.id_bustype.to_little_endian ();
+				guid_array[1] = 0;
+				guid_array[2] = (uint16) device.id_vendor.to_little_endian ();
+				guid_array[3] = 0;
+				guid_array[4] = (uint16) device.id_product.to_little_endian ();
+				guid_array[5] = 0;
+				guid_array[6] = (uint16) device.id_version.to_little_endian ();
+				guid_array[7] = 0;
+				_guid = uint16s_to_hex_string (guid_array);
+			}
+
+			return _guid;
+		}
+	}
 
 	private int _dpads_number = -1;
 	public uint8 dpads_number {
@@ -56,7 +74,6 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 			throw new FileError.FAILED (@"Evdev is unable to open $file_name: $(Posix.strerror (Posix.errno))");
 
 		_name = device.name;
-		_guid = LinuxGuidHelpers.from_dev (device);
 
 		// Poll the events in the default main loop
 		var channel = new IOChannel.unix_new (fd);
