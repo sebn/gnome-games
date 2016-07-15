@@ -30,6 +30,7 @@ public class LibGamepad.Mapping : Object {
 				var type = map_type (str);
 				if (type == InputType.INVALID) {
 					if (str != "platform") debug ("Invalid token : %s", str);
+
 					continue;
 				}
 				var value = map_value (str);
@@ -46,6 +47,7 @@ public class LibGamepad.Mapping : Object {
 					while (dpads.length <= dpad_index) dpads += new Dpad ();
 					dpads[dpad_index].types[dpad_position] = type;
 					dpads[dpad_index].values[dpad_position] = value;
+
 					break;
 				case 'b':
 					var button = int.parse (real[1:real.length]);
@@ -53,6 +55,7 @@ public class LibGamepad.Mapping : Object {
 					if (buttons_value.length <= button) buttons_value.resize (button + 1);
 					buttons_type[button] = type;
 					buttons_value[button] = value;
+
 					break;
 				case 'a':
 					var axis = int.parse (real[1:real.length]);
@@ -60,6 +63,7 @@ public class LibGamepad.Mapping : Object {
 					if (axes_value.length <= axis) axes_value.resize (axis + 1);
 					axes_type[axis] = type;
 					axes_value[axis] = value;
+
 					break;
 				}
 			}
@@ -79,11 +83,14 @@ public class LibGamepad.Mapping : Object {
 		switch (event.type) {
 		case InputType.AXIS:
 			event.axis = (StandardGamepadAxis) dpad.values[dpad_position];
+
 			break;
 		case InputType.BUTTON:
 			event.button = (StandardGamepadButton) dpad.values[dpad_position];
+
 			break;
 		}
+
 		return event;
 	}
 
@@ -93,11 +100,14 @@ public class LibGamepad.Mapping : Object {
 		switch (event.type) {
 		case InputType.AXIS:
 			event.axis = (StandardGamepadAxis) axes_value[axis_number];
+
 			break;
 		case InputType.BUTTON:
 			event.button = (StandardGamepadButton) axes_value[axis_number];
+
 			break;
 		}
+
 		return event;
 	}
 
@@ -107,11 +117,14 @@ public class LibGamepad.Mapping : Object {
 		switch (event.type) {
 		case InputType.AXIS:
 			event.axis = (StandardGamepadAxis) buttons_value[button_number];
+
 			break;
 		case InputType.BUTTON:
 			event.button = (StandardGamepadButton) buttons_value[button_number];
+
 			break;
 		}
+
 		return event;
 	}
 

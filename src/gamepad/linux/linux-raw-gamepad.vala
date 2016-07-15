@@ -95,6 +95,7 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 			/* Skip dpads */
 			if (i == Linux.Input.ABS_HAT0X) {
 				i = Linux.Input.ABS_HAT3Y;
+
 				continue;
 			}
 			if (device.has_event_code (Linux.Input.EV_ABS, i)) {
@@ -129,6 +130,7 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 				if (code >= Linux.Input.BTN_MISC) {
 					button_event (key_map[code - Linux.Input.BTN_MISC], (bool) ev.value);
 				}
+
 				break;
 			case Linux.Input.EV_ABS:
 				switch (code) {
@@ -142,12 +144,15 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 				case Linux.Input.ABS_HAT3Y:
 					code -= Linux.Input.ABS_HAT0X;
 					dpad_event (code / 2, code % 2, ev.value);
+
 					break;
 				default:
 					var axis = abs_map[code];
 					axis_event (axis, (double) ev.value / abs_info[axis].maximum);
+
 					break;
 				}
+
 				break;
 			}
 		}

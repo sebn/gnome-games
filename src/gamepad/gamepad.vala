@@ -84,9 +84,11 @@ public class LibGamepad.Gamepad : Object {
 		switch (event.type) {
 		case InputType.AXIS:
 			axis_event (event.axis, value);
+
 			break;
 		case InputType.BUTTON:
 			button_event (event.button, (bool) value);
+
 			break;
 		}
 	}

@@ -72,6 +72,7 @@ public class LibGamepad.MappingsManager {
 	 */
 	public static string? get_name (string guid) {
 		init_if_not ();
+
 		return names.get (guid);
 	}
 
@@ -83,6 +84,7 @@ public class LibGamepad.MappingsManager {
 	 */
 	public static string? get_mapping (string guid) {
 		init_if_not ();
+
 		return mappings.get (guid);
 	}
 
