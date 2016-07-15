@@ -12,8 +12,17 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 		client = new GUdev.Client ({"input"});
 		client.uevent.connect (handle_udev_client_callback);
 
-		// Initialize internally plugged in gamepads
-		client.query_by_subsystem ("input").foreach (initial_device_iterator);
+		// Initialize initially plugged in gamepads
+		var initial_devices_list = client.query_by_subsystem ("input");
+		foreach (var device in initial_devices_list) {
+			if (device.get_device_file () == null)
+				continue;
+
+			if (!is_gamepad (device))
+				continue;
+
+			add_gamepad (device);
+		}
 	}
 
 	public static LinuxRawGamepadMonitor get_instance () {
@@ -30,8 +39,6 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 	private void handle_udev_client_callback (string action, GUdev.Device device) {
 		if (device.get_device_file () == null)
 			return;
-
-		var identifier = device.get_device_file ();
 
 		if (!is_gamepad (device))
 			return;
@@ -52,18 +59,6 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 
 			break;
 		}
-	}
-
-	private void initial_device_iterator (GUdev.Device device) {
-		if (device.get_device_file () == null)
-			return;
-
-		var identifier = device.get_device_file ();
-
-		if (!is_gamepad (device))
-			return;
-
-		add_gamepad (device);
 	}
 
 	private RawGamepad? add_gamepad (GUdev.Device device) {
@@ -95,10 +90,7 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 	}
 
 	private static bool is_gamepad (GUdev.Device device) {
-		if ((device.has_property ("ID_INPUT_JOYSTICK") && device.get_property ("ID_INPUT_JOYSTICK") == "1") ||
-		    (device.has_property (".INPUT_CLASS") && device.get_property (".INPUT_CLASS") == "joystick"))
-			return true;
-		else
-			return false;
+		return ((device.has_property ("ID_INPUT_JOYSTICK") && device.get_property ("ID_INPUT_JOYSTICK") == "1") ||
+		        (device.has_property (".INPUT_CLASS") && device.get_property (".INPUT_CLASS") == "joystick"))
 	}
 }
