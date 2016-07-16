@@ -8,8 +8,11 @@ public class LibGamepad.Mapping : Object {
 	private DPad[] dpads;
 
 	public Mapping.from_sdl_string (string? mapping_string) throws MappingError {
-		if (mapping_string == null || mapping_string == "")
-			throw new MappingError.NOT_A_MAPPING ("The mapping string can't be null nor empty.");
+		if (mapping_string == null)
+			throw new MappingError.NOT_A_MAPPING ("The mapping string can't be null.");
+
+		if (mapping_string == "")
+			throw new MappingError.NOT_A_MAPPING ("The mapping string can't be empty.");
 
 		var mappings = mapping_string.split (",");
 		foreach (var mapping in mappings) {
