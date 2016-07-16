@@ -35,21 +35,5 @@ public interface LibGamepad.RawGamepad : Object {
 	 */
 	public abstract signal void unplugged ();
 
-	public abstract string name { get; }
 	public abstract string guid { get; }
-
-	/**
-	 * Number of axes of the gamepad
-	 */
-	public abstract uint8 axes_number { get; }
-
-	/**
-	 * Number of buttons of the gamepad
-	 */
-	public abstract uint8 buttons_number { get; }
-
-	/**
-	 * Number of dpads of the gamepad`
-	 */
-	public abstract uint8 dpads_number { get; }
 }

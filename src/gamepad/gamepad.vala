@@ -46,7 +46,7 @@ public class LibGamepad.Gamepad : Object {
 		this.raw_gamepad = raw_gamepad;
 		var guid = raw_gamepad.guid;
 		var mappings_manager = MappingsManager.get_instance ();
-		name = mappings_manager.get_name (guid) ?? raw_gamepad.name;
+		name = mappings_manager.get_name (guid);
 		mapping = new Mapping.from_sdl_string (mappings_manager.get_mapping (guid));
 		raw_gamepad.button_event.connect (on_raw_button_event);
 		raw_gamepad.axis_event.connect (on_raw_axis_event);
