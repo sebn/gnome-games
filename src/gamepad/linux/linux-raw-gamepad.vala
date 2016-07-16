@@ -93,40 +93,41 @@ private class LibGamepad.LinuxRawGamepad : Object, RawGamepad {
 	}
 
 	private void handle_evdev_event () {
-		int rc;
-		Linux.Input.Event ev;
-		rc = device.next_event (Libevdev.ReadFlag.NORMAL, out ev);
-		if (rc == 0) {
-			int code = ev.code;
-			switch (ev.type) {
-			case Linux.Input.EV_KEY:
-				if (code >= Linux.Input.BTN_MISC)
-					button_event (key_map[code - Linux.Input.BTN_MISC], (bool) ev.value);
+		Linux.Input.Event event;
+		if (device.next_event (Libevdev.ReadFlag.NORMAL, out event) != 0)
+			return;
+
+		// We need to typecast this to int as the Linux Input API VAPI presents them as ints
+		// while libevdev represents them as uints
+		int code = event.code;
+		switch (event.type) {
+		case Linux.Input.EV_KEY:
+			if (code >= Linux.Input.BTN_MISC)
+				button_event (key_map[code - Linux.Input.BTN_MISC], (bool) event.value);
+
+			break;
+		case Linux.Input.EV_ABS:
+			switch (code) {
+			case Linux.Input.ABS_HAT0X:
+			case Linux.Input.ABS_HAT0Y:
+			case Linux.Input.ABS_HAT1X:
+			case Linux.Input.ABS_HAT1Y:
+			case Linux.Input.ABS_HAT2X:
+			case Linux.Input.ABS_HAT2Y:
+			case Linux.Input.ABS_HAT3X:
+			case Linux.Input.ABS_HAT3Y:
+				code -= Linux.Input.ABS_HAT0X;
+				dpad_event (code / 2, code % 2, event.value);
 
 				break;
-			case Linux.Input.EV_ABS:
-				switch (code) {
-				case Linux.Input.ABS_HAT0X:
-				case Linux.Input.ABS_HAT0Y:
-				case Linux.Input.ABS_HAT1X:
-				case Linux.Input.ABS_HAT1Y:
-				case Linux.Input.ABS_HAT2X:
-				case Linux.Input.ABS_HAT2Y:
-				case Linux.Input.ABS_HAT3X:
-				case Linux.Input.ABS_HAT3Y:
-					code -= Linux.Input.ABS_HAT0X;
-					dpad_event (code / 2, code % 2, ev.value);
-
-					break;
-				default:
-					var axis = abs_map[code];
-					axis_event (axis, (double) ev.value / abs_info[axis].maximum);
-
-					break;
-				}
+			default:
+				var axis = abs_map[code];
+				axis_event (axis, (double) event.value / abs_info[axis].maximum);
 
 				break;
 			}
+
+			break;
 		}
 	}
 
