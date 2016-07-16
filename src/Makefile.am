@@ -53,6 +53,7 @@ gnome_games_SOURCES = \
 	dummy/dummy-icon.vala \
 	dummy/dummy-runner.vala \
 	\
+	gamepad/dpad.vala \
 	gamepad/raw-gamepad-monitor.vala \
 	gamepad/raw-gamepad.vala \
 	gamepad/linux/linux-raw-gamepad-monitor.vala \
