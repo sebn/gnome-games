@@ -45,15 +45,15 @@ public class LibGamepad.Mapping : Object {
 
 			switch (mapping_value[0]) {
 			case 'h':
-				parse_dpad_value (mapping_value, parsed_key);
+				parse_dpad_value (mapping_value, type, parsed_key);
 
 				break;
 			case 'b':
-				parse_button_value (mapping_value, parsed_key);
+				parse_button_value (mapping_value, type, parsed_key);
 
 				break;
 			case 'a':
-				parse_axis_value (mapping_value, parsed_key);
+				parse_axis_value (mapping_value, type, parsed_key);
 
 				break;
 			}
@@ -62,12 +62,10 @@ public class LibGamepad.Mapping : Object {
 
 	public MappedEvent get_dpad_mapping (int dpad_index, int dpad_axis, int dpad_value) {
 		var event = MappedEvent ();
-		int dpad_position;
 		var dpad = dpads[dpad_index];
-		if (dpad_value == 0)
-			dpad_position = (dpad.axis_values[dpad_axis] + dpad_axis + 4) % 4;
-		else
-			dpad_position = (dpad_value + dpad_axis + 4) % 4;
+		var dpad_changed_value = dpad_value == 0 ? dpad.axis_values[dpad_axis] : dpad_value;
+		// We add 4 so that the remainder is always positive.
+		int dpad_position = (dpad_changed_value + dpad_axis + 4) % 4;
 		dpad.axis_values[dpad_axis] = dpad_value;
 		event.type = dpad.types[dpad_position];
 		switch (event.type) {
@@ -118,7 +116,7 @@ public class LibGamepad.Mapping : Object {
 		return event;
 	}
 
-	private void parse_dpad_value (string mapping_value, int parsed_key) {
+	private void parse_dpad_value (string mapping_value, InputType type, int parsed_key) {
 		var dpad_parse_array = mapping_value[1:mapping_value.length].split (".");
 		var dpad_index = int.parse (dpad_parse_array[0]);
 		var dpad_position_2pow = int.parse (dpad_parse_array[1]);
@@ -133,7 +131,7 @@ public class LibGamepad.Mapping : Object {
 		dpads[dpad_index].values[dpad_position] = parsed_key;
 	}
 
-	private void parse_button_value (string mapping_value, int parsed_key) {
+	private void parse_button_value (string mapping_value, InputType type, int parsed_key) {
 		var button = int.parse (mapping_value[1:mapping_value.length]);
 		while (buttons_type.length <= button)
 			buttons_type += InputType.INVALID;
@@ -143,7 +141,7 @@ public class LibGamepad.Mapping : Object {
 		buttons_value[button] = parsed_key;
 	}
 
-	private void parse_axis_value (string mapping_value, int parsed_key) {
+	private void parse_axis_value (string mapping_value, InputType type, int parsed_key) {
 		var axis = int.parse (mapping_value[1:mapping_value.length]);
 		while (axes_type.length <= axis)
 			axes_type += InputType.INVALID;
