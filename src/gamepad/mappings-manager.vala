@@ -25,27 +25,15 @@ public class LibGamepad.MappingsManager : Object {
 		return instance;
 	}
 
-	/**
-	 * Adds mappings from a file
-	 * @param file_name          The file name
-	 */
 	public void add_from_file (string file_name) throws IOError {
 		var file = File.new_for_path (file_name);
 		add_from_input_stream (file.read ());
 	}
 
-	/**
-	 * Adds mappings from a resource path
-	 * @param path          The path
-	 */
 	public void add_from_resource (string path) throws IOError {
 		add_from_input_stream (resources_open_stream (path, ResourceLookupFlags.NONE));
 	}
 
-	/**
-	 * Adds mappings from an InputStream
-	 * @param input_stream          The input stream
-	 */
 	public void add_from_input_stream (InputStream input_stream) {
 		var data_stream = new DataInputStream (input_stream);
 		var mappingstr = data_stream.read_line ();
