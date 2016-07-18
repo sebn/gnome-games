@@ -65,24 +65,9 @@ public enum LibGamepad.StandardGamepadButton {
 	 */
 	STICK_R,
 
-	/**
-	 * The button at the top of the directional pad.
-	 */
 	DPAD_UP,
-
-	/**
-	 * The button at the bottom of the directional pad.
-	 */
 	DPAD_DOWN,
-
-	/**
-	 * The button at the left of the directional pad.
-	 */
 	DPAD_LEFT,
-
-	/**
-	 * The button at the right of the directional pad.
-	 */
 	DPAD_RIGHT,
 
 	/**
