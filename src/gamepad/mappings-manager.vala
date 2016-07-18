@@ -57,7 +57,7 @@ public class LibGamepad.MappingsManager : Object {
 
 
 	/**
-	 * Adds a mapping from a string (only one gamepad)
+	 * Adds a mapping from a SDL2 mapping string (only one gamepad)
 	 */
 	public void add_mapping (string mappingstr) {
 		if (mappingstr == "" || mappingstr[0] == '#')
