@@ -14,7 +14,8 @@ private class Games.DesktopTrackerQuery : Object, TrackerQuery {
 	public bool is_uri_valid (string uri) {
 		try {
 			check_uri (uri);
-		} catch (Error e) {
+		}
+		catch (Error e) {
 			return false;
 		}
 

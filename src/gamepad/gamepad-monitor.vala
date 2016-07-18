@@ -41,7 +41,8 @@ public class LibGamepad.GamepadMonitor : Object {
 		Gamepad gamepad;
 		try {
 			gamepad = new Gamepad (raw_gamepad);
-		} catch (MappingError e) {
+		}
+		catch (MappingError e) {
 			return null;
 		}
 

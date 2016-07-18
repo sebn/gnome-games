@@ -26,9 +26,7 @@ public class LibGamepad.Gamepad : Object {
 	 */
 	public signal void unplugged ();
 
-
 	private RawGamepad raw_gamepad;
-
 	private Mapping? mapping;
 
 	public Gamepad (RawGamepad raw_gamepad) throws FileError, MappingError {

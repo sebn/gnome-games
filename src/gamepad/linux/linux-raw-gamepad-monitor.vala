@@ -63,7 +63,8 @@ private class LibGamepad.LinuxRawGamepadMonitor : Object, RawGamepadMonitor {
 		RawGamepad raw_gamepad;
 		try {
 			raw_gamepad = new LinuxRawGamepad (identifier);
-		} catch (FileError e) {
+		}
+		catch (FileError e) {
 			return null;
 		}
 
