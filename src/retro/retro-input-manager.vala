@@ -8,7 +8,7 @@ private class Games.RetroInputManager : Object {
 	private bool[] is_port_plugged;
 	private int keyboard_port;
 
-	public RetroInputManager (Gtk.EventBox widget) {
+	public RetroInputManager (Gtk.Widget widget) {
 		input = new RetroGtk.InputDeviceManager ();
 		keyboard = new RetroGtk.VirtualGamepad (widget);
 		gamepad_monitor = LibGamepad.GamepadMonitor.get_instance ();
