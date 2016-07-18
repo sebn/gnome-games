@@ -53,10 +53,28 @@ gnome_games_SOURCES = \
 	dummy/dummy-icon.vala \
 	dummy/dummy-runner.vala \
 	\
+	gamepad/dpad.vala \
+	gamepad/raw-gamepad-monitor.vala \
+	gamepad/raw-gamepad.vala \
+	gamepad/linux/linux-raw-gamepad-monitor.vala \
+	gamepad/linux/linux-raw-gamepad.vala \
+	gamepad/gamepad-callbacks.vala \
+	gamepad/gamepad-monitor.vala \
+	gamepad/gamepad.vala \
+	gamepad/input-type.vala \
+	gamepad/mapped-event.vala \
+	gamepad/mapping-error.vala \
+	gamepad/mapping.vala \
+	gamepad/mappings-manager.vala \
+	gamepad/standard-gamepad-axis.vala \
+	gamepad/standard-gamepad-button.vala \
+	\
 	grilo/grilo-cover.vala \
 	grilo/grilo-media.vala \
 	\
 	retro/retro-error.vala \
+	retro/retro-gamepad.vala \
+	retro/retro-input-manager.vala \
 	retro/retro-log.vala \
 	retro/retro-runner.vala \
 	\
@@ -99,6 +117,7 @@ gnome_games_SOURCES = \
 
 gnome_games_VALAFLAGS = \
 	--target-glib=@GLIB_MIN_VERSION@ \
+	--vapidir=gamepad/linux/ \
 	--pkg gio-2.0 \
 	--pkg glib-2.0 \
 	--pkg grilo-0.3 \
@@ -106,6 +125,10 @@ gnome_games_VALAFLAGS = \
 	--pkg tracker-sparql-1.0 \
 	--pkg retro-gobject-0.6 \
 	--pkg retro-gtk-0.6 \
+	--pkg gudev-1.0 \
+	--pkg libevdev \
+	--pkg linux \
+	--pkg posix \
 	--gresources $(gresource_file) \
 	--vapi $(vapi_file) \
 	-H $(header_file) \
