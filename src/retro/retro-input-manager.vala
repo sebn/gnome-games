@@ -59,7 +59,8 @@ private class Games.RetroInputManager : Object {
 			input.remove_controller_device (keyboard_port);
 			keyboard_port = port;
 			input.set_controller_device (keyboard_port, keyboard);
-		} else {
+		}
+		else {
 			// Just remove the controller as no need to shift keyboard
 			is_port_plugged[port] = false;
 			input.remove_controller_device (port);
