@@ -36,10 +36,10 @@ public class LibGamepad.MappingsManager : Object {
 
 	public void add_from_input_stream (InputStream input_stream) {
 		var data_stream = new DataInputStream (input_stream);
-		var mappingstr = data_stream.read_line ();
-		while (mappingstr != null) {
-			add_mapping (mappingstr);
-			mappingstr = data_stream.read_line ();
+		var mapping_string = data_stream.read_line ();
+		while (mapping_string != null) {
+			add_mapping (mapping_string);
+			mapping_string = data_stream.read_line ();
 		}
 	}
 
@@ -47,12 +47,12 @@ public class LibGamepad.MappingsManager : Object {
 	/**
 	 * Adds a mapping from a SDL2 mapping string (only one gamepad)
 	 */
-	public void add_mapping (string mappingstr) {
-		if (mappingstr == "" || mappingstr[0] == '#')
+	public void add_mapping (string mapping_string) {
+		if (mapping_string == "" || mapping_string[0] == '#')
 			return;
 
-		if (mappingstr.index_of ("platform") == -1 || mappingstr.index_of ("platform:Linux") != -1) {
-			var split = mappingstr.split (",", 3);
+		if (mapping_string.index_of ("platform") == -1 || mapping_string.index_of ("platform:Linux") != -1) {
+			var split = mapping_string.split (",", 3);
 			names[split[0]] = split[1];
 			mappings[split[0]] = split[2];
 		}
