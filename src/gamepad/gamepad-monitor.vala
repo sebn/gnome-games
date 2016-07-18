@@ -32,10 +32,6 @@ public class LibGamepad.GamepadMonitor : Object {
 		return instance;
 	}
 
-	/**
-	 * This function allows to iterate over all gamepads
-	 * @param    callback          The callback
-	 */
 	public void foreach_gamepad (GamepadCallback callback) {
 		foreach (var gamepad in gamepads)
 			callback (gamepad);
