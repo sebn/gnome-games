@@ -4,6 +4,11 @@
 
 public enum LibGamepad.StandardGamepadButton {
 	/**
+	 * An unknown button
+	 */
+	UNKNOWN,
+
+	/**
 	 * The button at the bottom of the action pad.
 	 */
 	A,
@@ -87,9 +92,4 @@ public enum LibGamepad.StandardGamepadButton {
 	 * The button at the center of the menu pad.
 	 */
 	HOME,
-
-	/**
-	 * An unknown button
-	 */
-	UNKNOWN,
 }

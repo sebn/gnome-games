@@ -4,6 +4,11 @@
 
 public enum LibGamepad.StandardGamepadAxis {
 	/**
+	 * An unknown axis
+	 */
+	UNKNOWN,
+
+	/**
 	 * The horizontal axis of the left stick.
 	 *
 	 * Negative is left, positive is right.
@@ -30,9 +35,4 @@ public enum LibGamepad.StandardGamepadAxis {
 	 * Negative is up, positive is down.
 	 */
 	RIGHT_Y,
-
-	/**
-	 * An unknown axis
-	 */
-	UNKNOWN,
 }
