@@ -56,6 +56,7 @@ PKG_CHECK_MODULES(GNOME_GAMES, [
 	retro-gobject-0.6
 	retro-gtk-0.6
 	tracker-sparql-1.0
+    jsk-0.1
 ])
 
 PKG_CHECK_MODULES(GAMEPADS, [
