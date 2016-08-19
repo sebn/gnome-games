@@ -28,6 +28,11 @@ public class Games.RetroRunner : Object, Runner {
 		}
 	}
 
+	private MediaSet _media_set;
+	public MediaSet? media_set {
+		get { return _media_set; }
+	}
+
 	private Retro.Core core;
 	private RetroGtk.CairoDisplay video;
 	private RetroGtk.PaPlayer audio;
@@ -44,7 +49,6 @@ public class Games.RetroRunner : Object, Runner {
 
 	private string module_basename;
 	private string[] mime_types;
-	private string uri;
 	private Uid uid;
 	private bool core_supports_snapshotting;
 
@@ -70,8 +74,10 @@ public class Games.RetroRunner : Object, Runner {
 		is_ready = false;
 		should_save = false;
 
+		var game_media = new Media (uri);
+		_media_set = new MediaSet ({ game_media });
+
 		this.module_basename = module_basename;
-		this.uri = uri;
 		this.uid = uid;
 		this.core_supports_snapshotting = core_supports_snapshotting;
 	}
@@ -81,11 +87,27 @@ public class Games.RetroRunner : Object, Runner {
 		is_ready = false;
 		should_save = false;
 
+		var game_media = new Media (uri);
+		_media_set = new MediaSet ({ game_media });
+
 		this.mime_types = mime_types;
 		this.module_basename = module_basename;
-		this.uri = uri;
 		this.uid = uid;
 		this.core_supports_snapshotting = core_supports_snapshotting;
+	}
+
+	public RetroRunner.for_media_set (MediaSet media_set, Uid uid, string[] mime_types, string module_basename, bool core_supports_snapshotting) {
+		is_initialized = false;
+		is_ready = false;
+		should_save = false;
+
+		this._media_set = media_set;
+		this.mime_types = mime_types;
+		this.module_basename = module_basename;
+		this.uid = uid;
+		this.core_supports_snapshotting = core_supports_snapshotting;
+
+		_media_set.notify["selected-media-number"].connect (on_media_number_changed);
 	}
 
 	~RetroRunner () {
@@ -104,6 +126,7 @@ public class Games.RetroRunner : Object, Runner {
 	}
 
 	public void check_is_valid () throws Error {
+		load_media_data ();
 		init ();
 	}
 
@@ -112,6 +135,8 @@ public class Games.RetroRunner : Object, Runner {
 	}
 
 	public void start () throws Error {
+		load_media_data ();
+
 		if (!is_initialized)
 			init();
 
@@ -154,6 +179,10 @@ public class Games.RetroRunner : Object, Runner {
 		widget.add (video);
 		video.visible = true;
 		input_manager = new RetroInputManager (widget);
+
+		var media_number = media_set.selected_media_number;
+		var media = media_set.get_selected_media (media_number);
+		var uri = media.uri;
 
 		prepare_core (module_basename, uri);
 		core.shutdown.connect (on_shutdown);
@@ -315,11 +344,42 @@ public class Games.RetroRunner : Object, Runner {
 		stopped ();
 	}
 
+	private void on_media_number_changed () {
+		if (!is_initialized)
+			return;
+
+		var media_number = media_set.selected_media_number;
+
+		Media media = null;
+		try {
+			media = media_set.get_selected_media (media_number);
+		}
+		catch (Error e) {
+			warning (e.message);
+
+			return;
+		}
+
+		var uri = media.uri;
+
+		try_load_game (core, uri);
+
+		try {
+			save_media_data ();
+		}
+		catch (Error e) {
+			warning (e.message);
+		}
+	}
+
 	private void save () throws Error {
 		if (!should_save)
 			return;
 
 		save_ram ();
+
+		if (media_set.get_size () > 1)
+			save_media_data ();
 
 		if (!core_supports_snapshotting)
 			return;
@@ -419,6 +479,37 @@ public class Games.RetroRunner : Object, Runner {
 		if (!core.unserialize (data))
 			/* Not translated as this is not presented to the user */
 			throw new RetroError.COULDNT_LOAD_SNAPSHOT ("Could not load snapshot");
+	}
+
+	private void save_media_data () throws Error {
+		var dir = Application.get_medias_dir ();
+		try_make_dir (dir);
+
+		var medias_path = get_medias_path ();
+
+		string contents = media_set.selected_media_number.to_string();
+
+		FileUtils.set_contents (medias_path, contents, contents.length);
+	}
+
+	private void load_media_data () throws Error {
+		var medias_path = get_medias_path ();
+
+		if (!FileUtils.test (medias_path, FileTest.EXISTS))
+			return;
+
+		string contents;
+		FileUtils.get_contents (medias_path, out contents);
+
+		int disc_num = int.parse(contents);
+		media_set.selected_media_number = disc_num;
+	}
+
+	private string get_medias_path () throws Error {
+		var dir = Application.get_medias_dir ();
+		var uid = uid.get_uid ();
+
+		return @"$dir/$uid.media";
 	}
 
 	private string get_screenshot_path () throws Error {

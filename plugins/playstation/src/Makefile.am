@@ -1,12 +1,35 @@
 plugindir = $(libdir)/gnome-games/plugins
 plugin_LTLIBRARIES = libgames-playstation-plugin.la
 
+gresource_file = $(top_srcdir)/plugins/playstation/data/org.gnome.Games.plugin.playstation.gresource.xml
+
+resource_files = $(shell \
+	$(GLIB_COMPILE_RESOURCES) \
+	--generate-dependencies \
+	--sourcedir=$(top_srcdir)/plugins/playstation/data \
+	$(gresource_file) \
+)
+
+resources.c: $(gresource_file) $(resource_files)
+	$(AM_V_GEN) \
+	$(GLIB_COMPILE_RESOURCES) \
+		--target=$@ \
+		--sourcedir=$(top_srcdir)/plugins/playstation/data \
+		--generate-source \
+		$<
+
+BUILT_SOURCES = \
+	resources.c \
+	$(NULL)
+
 libgames_playstation_plugin_la_DEPENDENCIES = \
 	$(top_builddir)/src/gnome-games.vapi \
 	$(NULL)
 
 libgames_playstation_plugin_la_SOURCES = \
+	$(BUILT_SOURCES) \
 	playstation-error.vala \
+	playstation-game-factory.vala \
 	playstation-header.vala \
 	playstation-plugin.vala \
 	playstation-uid.vala \
@@ -19,6 +42,7 @@ libgames_playstation_plugin_la_VALAFLAGS = \
 	--pkg glib-2.0 \
 	--pkg gtk+-3.0 \
 	--pkg tracker-sparql-1.0 \
+	--gresources $(gresource_file) \
 	--vapidir $(top_builddir)/src \
 	$(NULL)
 
@@ -47,6 +71,7 @@ libgames_playstation_plugin_la_LDFLAGS = \
 
 EXTRA_DIST = \
 	$(plugin_DATA) \
+	$(gresource_file) \
 	$(NULL)
 
 MAINTAINERCLEANFILES = \

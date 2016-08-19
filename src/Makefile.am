@@ -41,6 +41,9 @@ gnome_games_SOURCES = \
 	core/game-source.vala \
 	core/game-uri-adapter.vala \
 	core/icon.vala \
+	core/media.vala \
+	core/media-set/media-set.vala \
+	core/media-set/media-set-error.vala \
 	core/plugin.vala \
 	core/plugin-register.vala \
 	core/plugin-registrar.vala \
@@ -54,6 +57,10 @@ gnome_games_SOURCES = \
 	dummy/dummy-game-source.vala \
 	dummy/dummy-icon.vala \
 	dummy/dummy-runner.vala \
+	\
+	gameinfo/gameinfo-doc.vala \
+	gameinfo/gameinfo-error.vala \
+	gameinfo/gameinfo-disc-id-title.vala \
 	\
 	gamepad/gamepad.vala \
 	gamepad/gamepad-callbacks.vala \
@@ -101,6 +108,8 @@ gnome_games_SOURCES = \
 	ui/error-info-bar.vala \
 	ui/game-icon-view.vala \
 	ui/game-thumbnail.vala \
+	ui/media-selector.vala \
+	ui/media-menu-button.vala \
 	ui/preferences-page.vala \
 	ui/preferences-page-plugins.vala \
 	ui/preferences-page-plugins-item.vala \
@@ -113,6 +122,7 @@ gnome_games_SOURCES = \
 	ui/ui-state.vala \
 	\
 	utils/composite-cover.vala \
+	utils/composite-title.vala \
 	utils/cue-sheet/cue-sheet.vala \
 	utils/cue-sheet/cue-sheet-error.vala \
 	utils/cue-sheet/cue-sheet-file-format.vala \
@@ -125,6 +135,7 @@ gnome_games_SOURCES = \
 	utils/grep.vala \
 	utils/local-cover.vala \
 	utils/string-input-stream.vala \
+	utils/xml-doc.vala \
 	\
 	config.vala \
 	credits.vala \
@@ -154,6 +165,7 @@ gnome_games_VALAFLAGS = \
 	--pkg glib-2.0 \
 	--pkg grilo-0.3 \
 	--pkg gtk+-3.0 \
+	--pkg libxml-2.0 \
 	--pkg libsoup-2.4 \
 	--pkg tracker-sparql-1.0 \
 	--pkg retro-gobject-0.6 \
